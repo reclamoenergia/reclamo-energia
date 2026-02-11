@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Documento pronto - ReclamoEnergia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root{--blue:#2F5FA7;--green:#2E8B57;--bg:#f4f6f8;--muted:#6b7280;}
+    body{font-family:Arial,sans-serif;margin:0;background:var(--bg);color:#111827;}
+    .wrap{max-width:920px;margin:0 auto;padding:28px 16px 60px;}
+    .card{background:#fff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:22px;}
+    h1{margin:0 0 8px;color:var(--blue);font-size:24px}
+    p{margin:0 0 14px;color:var(--muted);line-height:1.45}
+    .doc{
+      background:#fff;border:1px solid #e5e7eb;border-radius:14px;
+      padding:18px; line-height:1.55; font-size:15px; white-space:pre-wrap;
+    }
+    .watermark{
+      position:relative;
+    }
+    .watermark:before{
+      content:"ANTEPRIMA";
+      position:absolute; top:45%; left:50%;
+      transform:translate(-50%,-50%) rotate(-20deg);
+      font-size:64px; font-weight:900;
+      color:rgba(47,95,167,0.10);
+      pointer-events:none;
+      white-space:nowrap;
+    }
+    .box{
+      margin-top:16px;
+      border:1px solid #e5e7eb;
+      background:#f9fafb;
+      border-radius:14px;
+      padding:16px;
+    }
+    .priceRow{
+      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    }
+    .price{
+      font-size:28px; font-weight:900; color:var(--green);
+    }
+    .btn{
+      padding:12px 16px;border-radius:10px;border:1px solid var(--green);
+      background:var(--green);color:#fff;font-weight:900;font-size:16px;text-decoration:none;cursor:pointer;
+    }
+    .btn:hover{opacity:.93}
+    ul{margin:10px 0 0 18px;color:#111827}
+    li{margin:6px 0}
+    .small{margin-top:10px;font-size:12px;color:var(--muted);line-height:1.45}
+    .back{display:inline-block;margin-top:14px;color:var(--blue);text-decoration:none;font-weight:700}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Il tuo documento è pronto</h1>
+      <p>Controlla il testo qui sotto. Potrai scaricare il PDF pronto per l’invio (email/PEC) dopo il pagamento.</p>
+
+      <div class="doc watermark" id="doc"></div>
+
+      <div class="box">
+        <div class="priceRow">
+          <div>
+            <div style="font-weight:900;color:#111827;">Scarica il documento pronto per l’invio</div>
+            <div class="small">PDF formattato + versione pronta per email/PEC + mini guida “cosa fare dopo”.</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="price">9€</div>
+            <button class="btn" onclick="fakePay()">Scarica ora</button>
+          </div>
+        </div>
+        <ul>
+          <li>Documento formale e ordinato</li>
+          <li>PDF pronto da stampare o inviare</li>
+          <li>Nessun abbonamento</li>
+        </ul>
+        <div class="small">Pagamento sicuro. Il servizio fornisce modelli standard e non costituisce consulenza legale.</div>
+      </div>
+
+      <a class="back" href="azione.html">← Indietro</a>
+    </div>
+  </div>
+
+<script>
+  const p = new URLSearchParams(location.search);
+  const type = p.get('type') || 'reclamo';
+
+  // Dati inseriti
+  const data = {
+    fornitura: p.get('fornitura') || 'Luce',
+    fornitore: p.get('fornitore') || 'Fornitore',
+    altroCitta: p.get('altroCitta') || '',
+    nome: p.get('nome') || '',
+    email: p.get('email') || '',
+    indirizzo: p.get('indirizzo') || '',
+    telefono: p.get('telefono') || '',
+    numCliente: p.get('numCliente') || '',
+    numFattura: p.get('numFattura') || '',
+    dataFattura: p.get('dataFattura') || '',
+    importo: p.get('importo') || '',
+    indirizzoFornitura: p.get('indirizzoFornitura') || '',
+    descrizione: p.get('descrizione') || ''
+  };
+
+  // Template 1 (reclamo importo anomalo) come base MVP
+  // Per ora lo usiamo per tutti i "reclamo". Poi aggiungeremo gli altri.
+  const oggi = new Date();
+  const dd = String(oggi.getDate()).padStart(2,'0');
+  const mm = String(oggi.getMonth()+1).padStart(2,'0');
+  const yyyy = oggi.getFullYear();
+  const dataOggi = `${dd}/${mm}/${yyyy}`;
+
+  const cittaAltro = data.altroCitta ? `\n${data.altroCitta}` : '';
+
+  const testo = `
+${data.nome}
+${data.indirizzo}
+Email: ${data.email}${data.telefono ? `\nTelefono: ${data.telefono}` : ''}
+
+Spett.le
+${data.fornitore}
+Ufficio Reclami${cittaAltro}
+
+Oggetto: Reclamo formale relativo alla fattura n. ${data.numFattura}
+
+Con la presente intendo formulare formale reclamo in merito alla fattura n. ${data.numFattura}, emessa in data ${data.dataFattura}, relativa alla fornitura di ${data.fornitura} presso l’indirizzo ${data.indirizzoFornitura}, codice cliente ${data.numCliente}, per un importo complessivo pari a ${data.importo} €.
+
+L’importo indicato risulta significativamente superiore rispetto ai consumi abituali registrati per la medesima utenza e appare, pertanto, non coerente con l’andamento storico dei consumi.${data.descrizione ? `\n\nNote del cliente: ${data.descrizione}` : ''}
+
+Alla luce di quanto sopra, chiedo cortesemente:
+- la verifica puntuale dei consumi fatturati;
+- il controllo delle letture effettuate;
+- l’eventuale rettifica dell’importo qualora si riscontrassero errori o incongruenze.
+
+Resto in attesa di un Vostro riscontro scritto e, nel frattempo, mi riservo di tutelare i miei diritti nelle sedi opportune qualora la situazione non venga chiarita.
+
+Confidando in una sollecita verifica, porgo distinti saluti.
+
+Data: ${dataOggi}
+
+Firma
+________________________
+${data.nome}
+`.trim();
+
+  document.getElementById('doc').textContent = testo;
+
+  function fakePay(){
+    alert("Qui inseriremo Stripe. Per ora è una demo: il PDF sarà disponibile dopo il pagamento.");
+  }
+</script>
+</body>
+</html>
