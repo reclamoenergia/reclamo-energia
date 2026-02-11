@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Scegli richiesta - ReclamoEnergia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root{--blue:#2F5FA7;--green:#2E8B57;--bg:#f4f6f8;--muted:#6b7280;}
+    body{font-family:Arial,sans-serif;margin:0;background:var(--bg);color:#111827;}
+    .wrap{max-width:920px;margin:0 auto;padding:28px 16px 60px;}
+    .card{background:#fff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:22px;}
+    h1{margin:0 0 8px;color:var(--blue);font-size:26px}
+    p{margin:0 0 16px;color:var(--muted);line-height:1.45}
+    .grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}
+    @media(min-width:760px){.grid{grid-template-columns:1fr 1fr}}
+    a.tile{display:block;text-decoration:none;color:#111827;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:16px}
+    a.tile:hover{background:#f9fafb}
+    .tile h3{margin:0 0 6px;color:var(--blue);font-size:18px}
+    .tile .small{margin:0;color:var(--muted);font-size:14px}
+    .back{display:inline-block;margin-top:14px;color:var(--blue);text-decoration:none;font-weight:700}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Seleziona il documento</h1>
+      <p>Scegli l’opzione che ti serve. Nel prossimo passo inserirai pochi dati e vedrai il testo completo prima di scaricare il PDF.</p>
+
+      <div class="grid">
+        <a class="tile" href="form.html?type=reclamo">
+          <h3>Reclamo bolletta</h3>
+          <p class="small">Importo anomalo, lettura stimata, doppia fatturazione.</p>
+        </a>
+        <a class="tile" href="form.html?type=rateizzazione">
+          <h3>Richiesta rateizzazione</h3>
+          <p class="small">Chiedi un piano di pagamento in modo formale.</p>
+        </a>
+        <a class="tile" href="form.html?type=contatore">
+          <h3>Verifica contatore</h3>
+          <p class="small">Richiedi controllo se i consumi non ti tornano.</p>
+        </a>
+        <a class="tile" href="form.html?type=voltura">
+          <h3>Voltura</h3>
+          <p class="small">Cambio intestazione o aggiornamento dati contratto.</p>
+        </a>
+      </div>
+
+      <a class="back" href="./">← Torna alla homepage</a>
+    </div>
+  </div>
+</body>
+</html>
