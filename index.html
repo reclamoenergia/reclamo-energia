@@ -5,48 +5,229 @@
   <title>ReclamoEnergia</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
+    :root{
+      --blue:#2F5FA7;
+      --green:#2E8B57;
+      --bg:#f4f6f8;
+      --text:#333;
+      --muted:#6b7280;
+      --card:#ffffff;
+    }
+    body{
       font-family: Arial, sans-serif;
-      margin: 0;
-      background-color: #f4f6f8;
-      text-align: center;
-      color: #333;
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
     }
-    .container {
-      max-width: 600px;
-      margin: 60px auto;
-      padding: 20px;
-      background: white;
+    .wrap{
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 28px 16px 60px;
+    }
+    .card{
+      background:var(--card);
+      border-radius: 14px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      padding: 26px;
+    }
+    .hero{
+      text-align:center;
+      padding: 26px 18px;
+    }
+    h1{
+      margin: 0 0 10px;
+      font-size: 34px;
+      color: var(--blue);
+      line-height: 1.15;
+    }
+    .sub{
+      margin: 0 auto 18px;
+      max-width: 640px;
+      font-size: 18px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .badges{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin: 10px 0 18px;
+      color: #1f2937;
+      font-size: 14px;
+    }
+    .badge{
+      background:#eef2ff;
+      border:1px solid #e5e7eb;
+      padding:8px 10px;
+      border-radius: 999px;
+    }
+    .cta{
+      display:inline-block;
+      margin-top: 6px;
+      padding: 14px 22px;
+      background: var(--green);
+      color:#fff;
+      text-decoration:none;
       border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      font-size: 18px;
+      font-weight: 700;
     }
-    h1 {
-      font-size: 28px;
-      color: #2F5FA7;
+    .cta:hover{opacity:.92}
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 18px;
     }
-    p {
+    @media (min-width: 760px){
+      .grid{grid-template-columns: 1fr 1fr;}
+    }
+    .tile{
+      background:#fff;
+      border:1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 16px;
+      text-align:left;
+    }
+    .tile h3{
+      margin:0 0 6px;
+      color: var(--blue);
       font-size: 18px;
     }
-    .button {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 15px 25px;
-      background-color: #2E8B57;
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      font-size: 18px;
+    .tile p{
+      margin:0 0 12px;
+      color: var(--muted);
+      line-height:1.35;
+      font-size: 15px;
     }
-    .button:hover {
-      opacity: 0.9;
+    .btn{
+      display:inline-block;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      text-decoration:none;
+      color:#111827;
+      background:#f9fafb;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .btn:hover{background:#f3f4f6}
+    .section{
+      margin-top: 18px;
+    }
+    .section h2{
+      margin: 0 0 10px;
+      font-size: 20px;
+      color:#111827;
+      text-align:center;
+    }
+    .steps{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    @media (min-width: 760px){
+      .steps{grid-template-columns: 1fr 1fr 1fr;}
+    }
+    .step{
+      background:#fff;
+      border:1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 14px;
+      text-align:left;
+    }
+    .step b{color:var(--blue)}
+    .price{
+      margin-top: 18px;
+      text-align:center;
+      padding: 18px 16px;
+      border-radius: 14px;
+      background:#fff;
+      border:1px solid #e5e7eb;
+    }
+    .price .big{
+      font-size: 34px;
+      color: var(--green);
+      font-weight: 800;
+      margin: 4px 0 6px;
+    }
+    .small{
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 10px;
+      text-align:center;
+      line-height:1.4;
+    }
+    .footer{
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align:center;
+      line-height: 1.45;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>La bolletta ti sembra sbagliata?</h1>
-    <p>Scrivi il reclamo corretto in pochi minuti.</p>
-    <a href="#" class="button">Inizia ora</a>
+  <div class="wrap">
+    <div class="card hero">
+      <h1>La bolletta ti sembra sbagliata?</h1>
+      <p class="sub">Compila pochi dati, genera il documento e scaricalo pronto per l’invio. Semplice, chiaro, senza complicazioni.</p>
+
+      <div class="badges">
+        <div class="badge">✔ Paghi solo se scarichi</div>
+        <div class="badge">✔ Documento formale e ordinato</div>
+        <div class="badge">✔ Nessun abbonamento</div>
+      </div>
+
+      <a class="cta" href="#azioni">Inizia ora</a>
+    </div>
+
+    <div id="azioni" class="section">
+      <h2>Scegli cosa ti serve</h2>
+      <div class="grid">
+        <div class="tile">
+          <h3>Reclamo bolletta</h3>
+          <p>Per importo anomalo, lettura stimata, doppia fatturazione e casi simili.</p>
+          <a class="btn" href="#">Genera reclamo</a>
+        </div>
+        <div class="tile">
+          <h3>Richiesta rateizzazione</h3>
+          <p>Chiedi un piano di pagamento in modo formale e chiaro.</p>
+          <a class="btn" href="#">Genera richiesta</a>
+        </div>
+        <div class="tile">
+          <h3>Verifica contatore</h3>
+          <p>Richiedi controllo e verifica se i consumi non ti tornano.</p>
+          <a class="btn" href="#">Genera richiesta</a>
+        </div>
+        <div class="tile">
+          <h3>Voltura</h3>
+          <p>Richiedi cambio intestazione o aggiornamento dei dati del contratto.</p>
+          <a class="btn" href="#">Genera richiesta</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Come funziona</h2>
+      <div class="steps">
+        <div class="step"><b>1) Inserisci i dati</b><br>Numero fattura, importo e motivo.</div>
+        <div class="step"><b>2) Genera il documento</b><br>Testo completo e già formattato.</div>
+        <div class="step"><b>3) Scarica e invia</b><br>PDF pronto + versione per email/PEC.</div>
+      </div>
+    </div>
+
+    <div class="price">
+      <div class="big">9€</div>
+      <div>Paghi solo se decidi di scaricare il documento.</div>
+      <div class="small">Nessun abbonamento. Nessun costo nascosto.</div>
+    </div>
+
+    <div class="footer">
+      Il servizio fornisce modelli standard di comunicazione e non costituisce consulenza legale.
+    </div>
   </div>
 </body>
 </html>
