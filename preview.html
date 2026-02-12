@@ -115,6 +115,10 @@
     indirizzoFornitura: p.get('indirizzoFornitura') || '',
     descrizione: p.get('descrizione') || ''
   };
+  
+  const L = (label, value) => value ? `${label}: ${value}\n` : '';
+  const T = (value) => value ? `${value}\n` : '';
+
 
   // Template 1 (reclamo importo anomalo) come base MVP
   // 
@@ -133,9 +137,8 @@ if(type === "reclamo") {
   if(reason === "stimata") {
 
     testo = `
-${data.nome}
-${data.indirizzo}
-Email: ${data.email}
+${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('Telefono', data.telefono)}
+
 
 Spett.le
 ${data.fornitore}
@@ -161,9 +164,8 @@ ${data.nome}
   else if(reason === "doppia") {
 
     testo = `
-${data.nome}
-${data.indirizzo}
-Email: ${data.email}
+${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('Telefono', data.telefono)}
+
 
 Spett.le
 ${data.fornitore}
@@ -191,9 +193,8 @@ ${data.nome}
   else if(reason === "voci") {
 
     testo = `
-${data.nome}
-${data.indirizzo}
-Email: ${data.email}
+${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('Telefono', data.telefono)}
+
 
 Spett.le
 ${data.fornitore}
@@ -221,9 +222,8 @@ ${data.nome}
     // IMPORTO ANOMALO (default)
 
     testo = `
-${data.nome}
-${data.indirizzo}
-Email: ${data.email}
+${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('Telefono', data.telefono)}
+
 
 Spett.le
 ${data.fornitore}
@@ -255,9 +255,8 @@ ${data.nome}
 else if(type === "rateizzazione") {
 
   testo = `
-${data.nome}
-${data.indirizzo}
-Email: ${data.email}
+${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('Telefono', data.telefono)}
+
 
 Spett.le
 ${data.fornitore}
@@ -286,9 +285,8 @@ ${data.nome}
 else if(type === "contatore") {
 
   testo = `
-${data.nome}
-${data.indirizzo}
-Email: ${data.email}
+${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('Telefono', data.telefono)}
+
 
 Spett.le
 ${data.fornitore}
@@ -317,9 +315,8 @@ ${data.nome}
 else if(type === "voltura") {
 
   testo = `
-${data.nome}
-${data.indirizzo}
-Email: ${data.email}
+${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('Telefono', data.telefono)}
+
 
 Spett.le
 ${data.fornitore}
