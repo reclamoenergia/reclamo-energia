@@ -86,6 +86,8 @@
 <script>
   const p = new URLSearchParams(location.search);
   const type = p.get('type') || 'reclamo';
+  const reason = p.get('reason') || 'importo';
+
 
   // Dati inseriti
   const data = {
