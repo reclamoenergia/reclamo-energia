@@ -198,28 +198,60 @@
     if(n===3){
       const a = document.getElementById('generaBtn');
       a.onclick = () => {
-        const data = {
-          type,
-          reason,
-          fornitura: document.getElementById('fornitura').value,
-          fornitore: (fornitore.value === 'Altro')
-            ? (document.getElementById('altroNome').value || 'Fornitore')
-            : fornitore.value,
-          altroCitta: document.getElementById('altroCitta').value || '',
-          nome: document.getElementById('nome').value || '',
-          email: document.getElementById('email').value || '',
-          indirizzo: document.getElementById('indirizzo').value || '',
-          telefono: document.getElementById('telefono').value || '',
-          numCliente: document.getElementById('numCliente').value || '',
-          numFattura: document.getElementById('numFattura').value || '',
-          dataFattura: document.getElementById('dataFattura').value || '',
-          importo: document.getElementById('importo').value || '',
-          indirizzoFornitura: document.getElementById('indirizzoFornitura').value || '',
-          descrizione: document.getElementById('descrizione').value || ''
-        };
-        const qs = new URLSearchParams(data).toString();
-        a.href = 'preview.html?' + qs;
-      };
+  const get = (id) => (document.getElementById(id).value || '').trim();
+
+  const dataObj = {
+    type,
+    reason,
+    fornitura: get('fornitura'),
+    fornitore: (fornitore.value === 'Altro') ? (get('altroNome') || 'Fornitore') : fornitore.value,
+    altroCitta: get('altroCitta'),
+    nome: get('nome'),
+    email: get('email'),
+    indirizzo: get('indirizzo'),
+    telefono: get('telefono'),
+    numCliente: get('numCliente'),
+    numFattura: get('numFattura'),
+    dataFattura: get('dataFattura'),
+    importo: get('importo'),
+    indirizzoFornitura: get('indirizzoFornitura'),
+    descrizione: get('descrizione')
+  };
+
+  // Campi obbligatori per evitare documenti vuoti / monchi
+  let required = ['nome', 'email', 'fornitore'];
+
+  if (type === 'reclamo') {
+    required = required.concat(['numCliente', 'numFattura', 'dataFattura', 'importo', 'indirizzoFornitura']);
+  } else if (type === 'rateizzazione') {
+    required = required.concat(['numFattura', 'dataFattura', 'importo']);
+  } else if (type === 'contatore') {
+    required = required.concat(['numCliente', 'indirizzoFornitura']);
+  } else if (type === 'voltura') {
+    required = required.concat(['numCliente', 'indirizzoFornitura']);
+  }
+
+  const labels = {
+    nome: 'Nome e Cognome',
+    email: 'Email',
+    fornitore: 'Fornitore',
+    numCliente: 'Numero cliente',
+    numFattura: 'Numero fattura',
+    dataFattura: 'Data fattura',
+    importo: 'Importo',
+    indirizzoFornitura: 'Indirizzo fornitura'
+  };
+
+  const missing = required.filter((k) => !dataObj[k]);
+  if (missing.length) {
+    alert('Completa questi campi:\n- ' + missing.map(m => labels[m] || m).join('\n- '));
+    return false;
+  }
+
+  const qs = new URLSearchParams(dataObj).toString();
+  a.href = 'preview.html?' + qs;
+};
+
     }
   }
 </script>
