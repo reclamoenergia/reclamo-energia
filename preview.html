@@ -105,7 +105,7 @@
   };
 
   // Template 1 (reclamo importo anomalo) come base MVP
-  // Per ora lo usiamo per tutti i "reclamo". Poi aggiungeremo gli altri.
+  // 
   const oggi = new Date();
   const dd = String(oggi.getDate()).padStart(2,'0');
   const mm = String(oggi.getMonth()+1).padStart(2,'0');
@@ -121,27 +121,36 @@ if(type === "reclamo") {
   testo = `
 ${data.nome}
 ${data.indirizzo}
-Email: ${data.email}
+Email: ${data.email}${data.telefono ? `\nTelefono: ${data.telefono}` : ''}
 
 Spett.le
 ${data.fornitore}
 Ufficio Reclami
 
-Oggetto: Reclamo fattura n. ${data.numFattura}
+Oggetto: Reclamo formale relativo alla fattura n. ${data.numFattura}
 
-Con la presente intendo formulare reclamo relativo alla fattura n. ${data.numFattura}, emessa in data ${data.dataFattura}, per un importo pari a ${data.importo} €.
+Con la presente intendo formulare formale reclamo in merito alla fattura n. ${data.numFattura}, emessa in data ${data.dataFattura}, relativa alla fornitura di ${data.fornitura} presso l’indirizzo ${data.indirizzoFornitura}, codice cliente ${data.numCliente}, per un importo complessivo pari a ${data.importo} €.
 
-L’importo risulta anomalo rispetto ai consumi abituali.
+L’importo indicato risulta significativamente superiore rispetto ai consumi abituali registrati per la medesima utenza e appare non coerente con l’andamento storico dei consumi.
 
-Chiedo verifica e rettifica.
+Alla luce di quanto sopra, chiedo cortesemente:
+- la verifica puntuale dei consumi fatturati;
+- il controllo delle letture effettuate;
+- l’eventuale rettifica dell’importo qualora si riscontrassero errori o incongruenze.
+
+Resto in attesa di un Vostro riscontro scritto e mi riservo di tutelare i miei diritti qualora la situazione non venga adeguatamente chiarita.
+
+Distinti saluti.
 
 Data: ${dataOggi}
 
 Firma
+________________________
 ${data.nome}
 `.trim();
 
 }
+
 
 else if(type === "rateizzazione") {
 
@@ -152,20 +161,27 @@ Email: ${data.email}
 
 Spett.le
 ${data.fornitore}
+Ufficio Clienti
 
 Oggetto: Richiesta di rateizzazione fattura n. ${data.numFattura}
 
-Con riferimento alla fattura n. ${data.numFattura} dell’importo di ${data.importo} €, chiedo la possibilità di rateizzare il pagamento per difficoltà economiche temporanee.
+Con riferimento alla fattura n. ${data.numFattura}, emessa in data ${data.dataFattura}, dell’importo complessivo di ${data.importo} €, chiedo cortesemente la possibilità di concordare un piano di rateizzazione del pagamento.
 
-Resto in attesa di cortese riscontro.
+La presente richiesta è motivata da temporanee difficoltà economiche che non consentono il saldo in un’unica soluzione.
+
+Resto disponibile a concordare modalità e tempistiche di pagamento compatibili con le Vostre procedure.
+
+In attesa di cortese riscontro, porgo distinti saluti.
 
 Data: ${dataOggi}
 
 Firma
+________________________
 ${data.nome}
 `.trim();
 
 }
+
 
 else if(type === "contatore") {
 
@@ -176,20 +192,27 @@ Email: ${data.email}
 
 Spett.le
 ${data.fornitore}
+Ufficio Reclami
 
-Oggetto: Richiesta verifica contatore
+Oggetto: Richiesta di verifica tecnica del contatore
 
-Segnalo consumi anomali relativi alla fornitura presso ${data.indirizzoFornitura}.
+Con la presente segnalo consumi anomali relativi alla fornitura di ${data.fornitura} presso l’indirizzo ${data.indirizzoFornitura}, codice cliente ${data.numCliente}.
 
-Chiedo verifica tecnica del contatore.
+Alla luce delle recenti fatturazioni, ritengo opportuno richiedere una verifica tecnica del contatore al fine di accertarne il corretto funzionamento.
+
+Resto in attesa di indicazioni circa le modalità di verifica e gli eventuali costi previsti.
+
+Distinti saluti.
 
 Data: ${dataOggi}
 
 Firma
+________________________
 ${data.nome}
 `.trim();
 
 }
+
 
 else if(type === "voltura") {
 
@@ -200,20 +223,25 @@ Email: ${data.email}
 
 Spett.le
 ${data.fornitore}
+Ufficio Clienti
 
-Oggetto: Richiesta voltura contratto
+Oggetto: Richiesta di voltura del contratto di fornitura
 
-Con la presente chiedo il cambio di intestazione del contratto relativo alla fornitura presso ${data.indirizzoFornitura}.
+Con la presente chiedo la voltura del contratto relativo alla fornitura di ${data.fornitura} presso l’immobile sito in ${data.indirizzoFornitura}, codice cliente ${data.numCliente}.
 
-Resto in attesa di istruzioni per completare la procedura.
+Resto a disposizione per fornire eventuale documentazione necessaria e per completare la procedura secondo le Vostre indicazioni.
+
+In attesa di cortese riscontro, porgo distinti saluti.
 
 Data: ${dataOggi}
 
 Firma
+________________________
 ${data.nome}
 `.trim();
 
 }
+
 
 
   document.getElementById('doc').textContent = testo;
