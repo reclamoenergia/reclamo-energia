@@ -114,36 +114,107 @@
 
   const cittaAltro = data.altroCitta ? `\n${data.altroCitta}` : '';
 
-  const testo = `
+ let testo = "";
+
+if(type === "reclamo") {
+
+  testo = `
 ${data.nome}
 ${data.indirizzo}
-Email: ${data.email}${data.telefono ? `\nTelefono: ${data.telefono}` : ''}
+Email: ${data.email}
 
 Spett.le
 ${data.fornitore}
-Ufficio Reclami${cittaAltro}
+Ufficio Reclami
 
-Oggetto: Reclamo formale relativo alla fattura n. ${data.numFattura}
+Oggetto: Reclamo fattura n. ${data.numFattura}
 
-Con la presente intendo formulare formale reclamo in merito alla fattura n. ${data.numFattura}, emessa in data ${data.dataFattura}, relativa alla fornitura di ${data.fornitura} presso l’indirizzo ${data.indirizzoFornitura}, codice cliente ${data.numCliente}, per un importo complessivo pari a ${data.importo} €.
+Con la presente intendo formulare reclamo relativo alla fattura n. ${data.numFattura}, emessa in data ${data.dataFattura}, per un importo pari a ${data.importo} €.
 
-L’importo indicato risulta significativamente superiore rispetto ai consumi abituali registrati per la medesima utenza e appare, pertanto, non coerente con l’andamento storico dei consumi.${data.descrizione ? `\n\nNote del cliente: ${data.descrizione}` : ''}
+L’importo risulta anomalo rispetto ai consumi abituali.
 
-Alla luce di quanto sopra, chiedo cortesemente:
-- la verifica puntuale dei consumi fatturati;
-- il controllo delle letture effettuate;
-- l’eventuale rettifica dell’importo qualora si riscontrassero errori o incongruenze.
-
-Resto in attesa di un Vostro riscontro scritto e, nel frattempo, mi riservo di tutelare i miei diritti nelle sedi opportune qualora la situazione non venga chiarita.
-
-Confidando in una sollecita verifica, porgo distinti saluti.
+Chiedo verifica e rettifica.
 
 Data: ${dataOggi}
 
 Firma
-________________________
 ${data.nome}
 `.trim();
+
+}
+
+else if(type === "rateizzazione") {
+
+  testo = `
+${data.nome}
+${data.indirizzo}
+Email: ${data.email}
+
+Spett.le
+${data.fornitore}
+
+Oggetto: Richiesta di rateizzazione fattura n. ${data.numFattura}
+
+Con riferimento alla fattura n. ${data.numFattura} dell’importo di ${data.importo} €, chiedo la possibilità di rateizzare il pagamento per difficoltà economiche temporanee.
+
+Resto in attesa di cortese riscontro.
+
+Data: ${dataOggi}
+
+Firma
+${data.nome}
+`.trim();
+
+}
+
+else if(type === "contatore") {
+
+  testo = `
+${data.nome}
+${data.indirizzo}
+Email: ${data.email}
+
+Spett.le
+${data.fornitore}
+
+Oggetto: Richiesta verifica contatore
+
+Segnalo consumi anomali relativi alla fornitura presso ${data.indirizzoFornitura}.
+
+Chiedo verifica tecnica del contatore.
+
+Data: ${dataOggi}
+
+Firma
+${data.nome}
+`.trim();
+
+}
+
+else if(type === "voltura") {
+
+  testo = `
+${data.nome}
+${data.indirizzo}
+Email: ${data.email}
+
+Spett.le
+${data.fornitore}
+
+Oggetto: Richiesta voltura contratto
+
+Con la presente chiedo il cambio di intestazione del contratto relativo alla fornitura presso ${data.indirizzoFornitura}.
+
+Resto in attesa di istruzioni per completare la procedura.
+
+Data: ${dataOggi}
+
+Firma
+${data.nome}
+`.trim();
+
+}
+
 
   document.getElementById('doc').textContent = testo;
 
