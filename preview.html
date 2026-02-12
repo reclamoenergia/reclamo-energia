@@ -138,7 +138,12 @@ if(type === "reclamo") {
   if(reason === "stimata") {
 
     testo = `
-${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('Telefono', data.telefono)}
+          ${T(data.nome)}
+          ${T(data.indirizzo)}
+          ${L('Email', data.email)}
+          ${L('PEC', data.pec)}
+          ${L('Telefono', data.telefono)}
+
 
 
 Spett.le
