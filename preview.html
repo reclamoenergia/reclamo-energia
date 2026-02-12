@@ -120,27 +120,52 @@
 
 if(type === "reclamo") {
 
-  testo = `
+  if(reason === "stimata") {
+
+    testo = `
 ${data.nome}
 ${data.indirizzo}
-Email: ${data.email}${data.telefono ? `\nTelefono: ${data.telefono}` : ''}
+Email: ${data.email}
 
 Spett.le
 ${data.fornitore}
 Ufficio Reclami
 
-Oggetto: Reclamo formale relativo alla fattura n. ${data.numFattura}
+Oggetto: Reclamo per lettura stimata non corretta – fattura n. ${data.numFattura}
 
-Con la presente intendo formulare formale reclamo in merito alla fattura n. ${data.numFattura}, emessa in data ${data.dataFattura}, relativa alla fornitura di ${data.fornitura} presso l’indirizzo ${data.indirizzoFornitura}, codice cliente ${data.numCliente}, per un importo complessivo pari a ${data.importo} €.
+Con riferimento alla fattura n. ${data.numFattura}, emessa in data ${data.dataFattura}, relativa alla fornitura di ${data.fornitura} presso ${data.indirizzoFornitura}, segnalo che gli importi risultano calcolati sulla base di letture stimate non corrispondenti ai consumi effettivi.
 
-L’importo indicato risulta significativamente superiore rispetto ai consumi abituali registrati per la medesima utenza e appare non coerente con l’andamento storico dei consumi.
+Chiedo pertanto la verifica delle letture e l’emissione di eventuale fattura rettificativa sulla base dei consumi reali.
 
-Alla luce di quanto sopra, chiedo cortesemente:
-- la verifica puntuale dei consumi fatturati;
-- il controllo delle letture effettuate;
-- l’eventuale rettifica dell’importo qualora si riscontrassero errori o incongruenze.
+Resto in attesa di cortese riscontro.
 
-Resto in attesa di un Vostro riscontro scritto e mi riservo di tutelare i miei diritti qualora la situazione non venga adeguatamente chiarita.
+Data: ${dataOggi}
+
+Firma
+________________________
+${data.nome}
+`.trim();
+
+  }
+
+  else if(reason === "doppia") {
+
+    testo = `
+${data.nome}
+${data.indirizzo}
+Email: ${data.email}
+
+Spett.le
+${data.fornitore}
+Ufficio Reclami
+
+Oggetto: Reclamo per doppia fatturazione – fattura n. ${data.numFattura}
+
+Con la presente segnalo la presenza di una possibile doppia fatturazione relativa alla fornitura presso ${data.indirizzoFornitura}, codice cliente ${data.numCliente}.
+
+La fattura n. ${data.numFattura}, dell’importo di ${data.importo} €, sembra riferirsi a periodi già oggetto di precedente fatturazione.
+
+Chiedo pertanto verifica e annullamento degli importi eventualmente non dovuti.
 
 Distinti saluti.
 
@@ -151,7 +176,70 @@ ________________________
 ${data.nome}
 `.trim();
 
+  }
+
+  else if(reason === "voci") {
+
+    testo = `
+${data.nome}
+${data.indirizzo}
+Email: ${data.email}
+
+Spett.le
+${data.fornitore}
+Ufficio Reclami
+
+Oggetto: Reclamo per addebito di voci non previste – fattura n. ${data.numFattura}
+
+Con riferimento alla fattura n. ${data.numFattura}, dell’importo di ${data.importo} €, segnalo la presenza di voci di spesa non previste o non espressamente autorizzate.
+
+Chiedo cortesemente dettagliata spiegazione delle stesse e, ove non dovute, la loro immediata rettifica.
+
+Resto in attesa di cortese riscontro.
+
+Data: ${dataOggi}
+
+Firma
+________________________
+${data.nome}
+`.trim();
+
+  }
+
+  else {
+
+    // IMPORTO ANOMALO (default)
+
+    testo = `
+${data.nome}
+${data.indirizzo}
+Email: ${data.email}
+
+Spett.le
+${data.fornitore}
+Ufficio Reclami
+
+Oggetto: Reclamo formale relativo alla fattura n. ${data.numFattura}
+
+Con la presente intendo formulare formale reclamo in merito alla fattura n. ${data.numFattura}, emessa in data ${data.dataFattura}, relativa alla fornitura di ${data.fornitura} presso l’indirizzo ${data.indirizzoFornitura}, codice cliente ${data.numCliente}, per un importo complessivo pari a ${data.importo} €.
+
+L’importo indicato risulta significativamente superiore rispetto ai consumi abituali registrati per la medesima utenza.
+
+Chiedo verifica puntuale dei consumi e rettifica dell’importo qualora si riscontrassero incongruenze.
+
+Distinti saluti.
+
+Data: ${dataOggi}
+
+Firma
+________________________
+${data.nome}
+`.trim();
+
+  }
+
 }
+
 
 
 else if(type === "rateizzazione") {
