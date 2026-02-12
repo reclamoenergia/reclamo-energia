@@ -345,6 +345,20 @@ ${data.nome}
 
 
   document.getElementById('doc').textContent = testo;
+  // Salva il documento per poterlo scaricare in PDF nella pagina successiva (success.html)
+    try {
+      const payload = {
+        text: testo,
+        createdAt: Date.now(),
+        type: type,
+        reason: (typeof reason !== 'undefined' ? reason : ''),
+        filename: `ReclamoEnergia_${type}_${dataOggi.replaceAll('/','-')}.pdf`
+      };
+      localStorage.setItem('reclamoenergia_last_doc', JSON.stringify(payload));
+    } catch (e) {
+      // Se localStorage non è disponibile, pazienza: l'utente potrà comunque copiare il testo.
+    }
+
 
   
 </script>
