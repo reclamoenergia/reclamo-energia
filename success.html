@@ -25,7 +25,7 @@
   <div class="wrap">
     <div class="card">
       <h1>Pagamento riuscito ✅</h1>
-      <p>Grazie. Nei prossimi step automatizzeremo PDF ed email. Per ora puoi inviare il reclamo copiando il testo dalla pagina precedente.</p>
+      <p>Grazie. Scarica il PDF e invialo via email o PEC al tuo fornitore.</p>
 
       <a class="btn" href="./">Torna alla homepage</a>
 
@@ -56,119 +56,148 @@
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
               <script>
-                function downloadPdf(){
-                  const msg = document.getElementById('pdfMsg');
-                  msg.textContent = '';
-              
-                  let raw = null;
-                  try {
-                    raw = localStorage.getItem('reclamoenergia_last_doc');
-                  } catch(e){}
-              
-                  if(!raw){
-                    msg.textContent = "Non trovo il documento in questo browser. Torna indietro alla pagina del documento e riprova.";
-                    return;
-                  }
-              
-                  let payload;
-                  try {
-                    payload = JSON.parse(raw);
-                  } catch(e){
-                    msg.textContent = "Documento non valido. Torna indietro alla pagina del documento e riprova.";
-                    return;
-                  }
-              
-                  const text = payload.text || '';
-                  if(!text.trim()){
-                    msg.textContent = "Documento vuoto. Torna indietro alla pagina del documento e riprova.";
-                    return;
-                  }
-              
-                  const { jsPDF } = window.jspdf;
-                  const doc = new jsPDF({ unit: "pt", format: "a4" });
-              
-                  const pageWidth = doc.internal.pageSize.getWidth();
-                  const pageHeight = doc.internal.pageSize.getHeight();
-              
-                  const margin = 56;
-                  const maxWidth = pageWidth - margin*2;
-                  const lineHeight = 16;
-              
-                  doc.setFont("times", "normal");
-                  doc.setFontSize(12);
-              
-                 const { jsPDF } = window.jspdf;
-                  const doc = new jsPDF({ unit: "pt", format: "a4" });
-                  
-                  const pageWidth = doc.internal.pageSize.getWidth();
-                  const pageHeight = doc.internal.pageSize.getHeight();
-                  
-                  const margin = 60;
-                  const maxWidth = pageWidth - margin * 2;
-                  
-                  doc.setFont("times", "normal");
-                  doc.setFontSize(12);
-                  
-                  let y = margin;
-                  
-                  // Dividiamo il testo in righe
-                  const lines = text.split("\n");
-                  
-                  // === MITTENTE (prime righe fino a Spett.le) ===
-                  let i = 0;
-                  while (i < lines.length && !lines[i].startsWith("Spett.le")) {
-                    if (lines[i].trim() !== "") {
-                      doc.text(lines[i], margin, y);
-                      y += 18;
-                    }
-                    i++;
-                  }
-                  
-                  y += 20;
-                  
-                  // === DESTINATARIO ===
-                  doc.setFont("times", "bold");
-                  doc.text(lines[i], pageWidth - margin, margin, { align: "right" });
-                  i++;
-                  
-                  doc.setFont("times", "normal");
-                  while (i < lines.length && !lines[i].startsWith("Oggetto:")) {
-                    if (lines[i].trim() !== "") {
-                      doc.text(lines[i], pageWidth - margin, margin + (i * 18), { align: "right" });
-                    }
-                    i++;
-                  }
-                  
-                  y += 40;
-                  
-                  // === OGGETTO ===
-                  doc.setFont("times", "bold");
-                  doc.text(lines[i], margin, y);
-                  y += 30;
-                  i++;
-                  
-                  // === CORPO LETTERA ===
-                  doc.setFont("times", "normal");
-                  
-                  for (; i < lines.length; i++) {
-                    if (y > pageHeight - margin) {
-                      doc.addPage();
-                      y = margin;
-                    }
-                  
-                    if (lines[i].trim() === "") {
-                      y += 12;
-                    } else {
-                      const split = doc.splitTextToSize(lines[i], maxWidth);
-                      doc.text(split, margin, y);
-                      y += split.length * 18;
-                    }
-                  }
-                  
-                  doc.save(filename);
+                <script>
+                 
+function downloadPdf(){
+  const msg = document.getElementById('pdfMsg');
+  msg.textContent = '';
 
-                  msg.textContent = "PDF scaricato ✅";
-                }
+  let raw = null;
+  try { raw = localStorage.getItem('reclamoenergia_last_doc'); } catch(e){}
+
+  if(!raw){
+    msg.textContent = "Non trovo il documento in questo browser. Torna alla pagina del documento e riprova.";
+    return;
+  }
+
+  let payload;
+  try { payload = JSON.parse(raw); } catch(e){
+    msg.textContent = "Documento non valido. Torna alla pagina del documento e riprova.";
+    return;
+  }
+
+  const text = (payload.text || '').trim();
+  if(!text){
+    msg.textContent = "Documento vuoto. Torna alla pagina del documento e riprova.";
+    return;
+  }
+
+  const filename = (payload.filename || 'ReclamoEnergia.pdf').replace(/[^\w\-\.]+/g, '_');
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
+
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+
+  const margin = 64;
+  const maxWidth = pageWidth - margin * 2;
+  const lineGap = 18;
+
+  // Helpers
+  const newPageIfNeeded = () => {
+    if (y > pageHeight - margin) {
+      doc.addPage();
+      y = margin;
+    }
+  };
+
+  doc.setFont("times", "normal");
+  doc.setFontSize(12);
+
+  let y = margin;
+
+  // Spezza in righe originali (manteniamo i "vuoti" come spazi)
+  const lines = text.split("\n");
+
+  // 1) MITTENTE: fino a "Spett.le"
+  let i = 0;
+  while (i < lines.length && !lines[i].trim().startsWith("Spett.le")) {
+    const s = lines[i].trimEnd();
+    if (s.trim() === "") {
+      y += 10;
+    } else {
+      const wrapped = doc.splitTextToSize(s, maxWidth);
+      for (const w of wrapped) {
+        newPageIfNeeded();
+        doc.text(w, margin, y);
+        y += lineGap;
+      }
+    }
+    i++;
+  }
+
+  // Spazio prima del destinatario
+  y += 16;
+
+  // 2) DESTINATARIO: da "Spett.le" fino a "Oggetto:"
+  // Lo stampiamo in alto a destra (stile lettera)
+  let destLines = [];
+  while (i < lines.length && !lines[i].trim().startsWith("Oggetto:")) {
+    if (lines[i].trim() !== "") destLines.push(lines[i].trimEnd());
+    i++;
+  }
+
+  // stampa destinatario in colonna a destra (in alto, ma senza sovrapporsi al mittente)
+  const destX = pageWidth - margin;
+  let destY = margin; // in alto
+  doc.setFont("times", "normal");
+  for (let d = 0; d < destLines.length; d++) {
+    doc.text(destLines[d], destX, destY + d * lineGap, { align: "right" });
+  }
+
+  // linea leggera di separazione
+  y = Math.max(y, destY + destLines.length * lineGap + 18);
+  doc.setDrawColor(210);
+  doc.line(margin, y, pageWidth - margin, y);
+  y += 22;
+
+  // 3) OGGETTO
+  let oggetto = "";
+  if (i < lines.length && lines[i].trim().startsWith("Oggetto:")) {
+    oggetto = lines[i].trimEnd();
+    i++;
+  }
+
+  doc.setFont("times", "bold");
+  const oggWrapped = doc.splitTextToSize(oggetto, maxWidth);
+  for (const w of oggWrapped) {
+    newPageIfNeeded();
+    doc.text(w, margin, y);
+    y += lineGap;
+  }
+  doc.setFont("times", "normal");
+  y += 10;
+
+  // 4) CORPO
+  for (; i < lines.length; i++) {
+    const s = lines[i].trimEnd();
+
+    if (s.trim() === "") {
+      y += 10;
+      continue;
+    }
+
+    const wrapped = doc.splitTextToSize(s, maxWidth);
+    for (const w of wrapped) {
+      newPageIfNeeded();
+      doc.text(w, margin, y);
+      y += lineGap;
+    }
+  }
+
+  // footer discreto
+  doc.setFontSize(9);
+  doc.setTextColor(130);
+  doc.text("Documento generato tramite ReclamoEnergia", margin, pageHeight - 28);
+  doc.setTextColor(0);
+  doc.setFontSize(12);
+
+  doc.save(filename);
+  msg.textContent = "PDF scaricato ✅";
+}
+</script>
+
               </script>
 
   
