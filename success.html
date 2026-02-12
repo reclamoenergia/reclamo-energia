@@ -98,18 +98,38 @@
                   doc.setFontSize(12);
               
                   const lines = doc.splitTextToSize(text, maxWidth);
-              
+                  
                   let y = margin;
+                  
+                  // Titolo centrato in alto
+                  doc.setFontSize(14);
+                  doc.setFont("times", "bold");
+                  doc.text("COMUNICAZIONE FORMALE", pageWidth / 2, y, { align: "center" });
+                  
+                  y += 30;
+                  
+                  // Linea separatrice
+                  doc.setDrawColor(180);
+                  doc.line(margin, y, pageWidth - margin, y);
+                  
+                  y += 30;
+                  
+                  // Corpo testo
+                  doc.setFontSize(12);
+                  doc.setFont("times", "normal");
+                  
                   for (let i = 0; i < lines.length; i++) {
                     if (y > pageHeight - margin) {
                       doc.addPage();
                       y = margin;
                     }
                     doc.text(lines[i], margin, y);
-                    y += lineHeight;
+                    y += 18;
                   }
+
               
                   const filename = payload.filename || "ReclamoEnergia.pdf";
+                  
                   doc.save(filename);
                   msg.textContent = "PDF scaricato ✅";
                 }
