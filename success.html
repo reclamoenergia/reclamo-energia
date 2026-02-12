@@ -82,99 +82,94 @@ function downloadPdf(){
   const filename = (payload.filename || 'ReclamoEnergia.pdf').replace(/[^\w\-\.]+/g, '_');
 
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: "pt", format: "a4" });
+const doc = new jsPDF({ unit: "pt", format: "a4" });
 
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
+const pageWidth = doc.internal.pageSize.getWidth();
+const pageHeight = doc.internal.pageSize.getHeight();
 
-  const margin = 64;
-  const maxWidth = pageWidth - margin * 2;
-  const lineGap = 18;
+const margin = 70;
+const maxWidth = pageWidth - margin * 2;
+const lineGap = 19;
 
-  let y = margin;
+doc.setFont("times", "normal");
+doc.setFontSize(12);
 
-  const newPageIfNeeded = () => {
-    if (y > pageHeight - margin) {
-      doc.addPage();
-      y = margin;
-    }
-  };
+let y = margin;
 
-  doc.setFont("times", "normal");
-  doc.setFontSize(12);
+const lines = text.split("\n");
 
-  const lines = text.split("\n");
-
-  // MITTENTE fino a "Spett.le"
-  let i = 0;
-  while (i < lines.length && !lines[i].trim().startsWith("Spett.le")) {
-    const s = lines[i].trimEnd();
-    if (s.trim() === "") { y += 10; i++; continue; }
-
-    const wrapped = doc.splitTextToSize(s, maxWidth);
-    for (const w of wrapped) {
-      newPageIfNeeded();
-      doc.text(w, margin, y);
-      y += lineGap;
-    }
-    i++;
-  }
-
-  y += 16;
-
-  // DESTINATARIO (da Spett.le a Oggetto:)
-  let destLines = [];
-  while (i < lines.length && !lines[i].trim().startsWith("Oggetto:")) {
-    if (lines[i].trim() !== "") destLines.push(lines[i].trimEnd());
-    i++;
-  }
-
-  const destX = pageWidth - margin;
-  let destY = margin;
-  for (let d = 0; d < destLines.length; d++) {
-    doc.text(destLines[d], destX, destY + d * lineGap, { align: "right" });
-  }
-
-  y = Math.max(y, destY + destLines.length * lineGap + 18);
-  doc.setDrawColor(210);
-  doc.line(margin, y, pageWidth - margin, y);
-  y += 22;
-
-  // OGGETTO
-  let oggetto = "";
-  if (i < lines.length && lines[i].trim().startsWith("Oggetto:")) {
-    oggetto = lines[i].trimEnd();
-    i++;
-  }
-
-  doc.setFont("times", "bold");
-  const oggWrapped = doc.splitTextToSize(oggetto, maxWidth);
-  for (const w of oggWrapped) {
-    newPageIfNeeded();
-    doc.text(w, margin, y);
+// --- MITTENTE (fino a Spett.le) ---
+let i = 0;
+while (i < lines.length && !lines[i].trim().startsWith("Spett.le")) {
+  const row = lines[i].trim();
+  if (row !== "") {
+    doc.text(row, margin, y);
     y += lineGap;
   }
+  i++;
+}
+
+// --- DESTINATARIO (a destra) ---
+let destStartY = margin;
+let destLines = [];
+
+while (i < lines.length && !lines[i].trim().startsWith("Oggetto:")) {
+  if (lines[i].trim() !== "") destLines.push(lines[i].trim());
+  i++;
+}
+
+for (let d = 0; d < destLines.length; d++) {
+  doc.text(destLines[d], pageWidth - margin, destStartY + d * lineGap, { align: "right" });
+}
+
+// Allineiamo y sotto il blocco più basso
+y = Math.max(y, destStartY + destLines.length * lineGap) + 40;
+
+// --- OGGETTO ---
+if (i < lines.length && lines[i].trim().startsWith("Oggetto:")) {
+  doc.setFont("times", "bold");
+  doc.text(lines[i].trim(), margin, y);
   doc.setFont("times", "normal");
-  y += 10;
+  y += 30;
+  i++;
+}
 
-  // CORPO
-  for (; i < lines.length; i++) {
-    const s = lines[i].trimEnd();
-    if (s.trim() === "") { y += 10; continue; }
+// --- CORPO LETTERA ---
+for (; i < lines.length; i++) {
+  const row = lines[i].trimEnd();
 
-    const wrapped = doc.splitTextToSize(s, maxWidth);
-    for (const w of wrapped) {
-      newPageIfNeeded();
-      doc.text(w, margin, y);
-      y += lineGap;
-    }
+  if (row === "") {
+    y += 14;
+    continue;
   }
 
-  doc.setFontSize(9);
-  doc.setTextColor(130);
+  const wrapped = doc.splitTextToSize(row, maxWidth);
+  doc.text(wrapped, margin, y);
+  y += wrapped.length * lineGap;
+}
+
+// --- DATA (allineata a destra sopra firma) ---
+const today = new Date();
+const formatted = today.toLocaleDateString("it-IT");
+doc.text("Data: " + formatted, pageWidth - margin, pageHeight - 140, { align: "right" });
+
+// --- FIRMA ---
+doc.text("Firma", pageWidth - margin, pageHeight - 100, { align: "right" });
+doc.text("________________________", pageWidth - margin, pageHeight - 80, { align: "right" });
+
+// --- Footer discreto ---
+doc.setFontSize(9);
+doc.setTextColor(140);
+doc.text("Documento generato tramite ReclamoEnergia", margin, pageHeight - 30);
+
+doc.save(filename);
+
+
+
+
+  
   
 
-  doc.save(filename);
   msg.textContent = "PDF scaricato ✅";
 }
 </script>
