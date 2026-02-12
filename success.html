@@ -29,6 +29,10 @@
 
       <a class="btn" href="./">Torna alla homepage</a>
 
+      <br><br>
+      <button class="btn" style="background:#2E8B57;border-color:#2E8B57;" onclick="downloadPdf()">Scarica PDF</button>
+      <div class="small" id="pdfMsg" style="margin-top:10px;"></div>
+
       <div class="box">
         <b>Cosa fare adesso</b>
         <div class="small">
@@ -44,5 +48,68 @@
       </div>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+              <script>
+                function downloadPdf(){
+                  const msg = document.getElementById('pdfMsg');
+                  msg.textContent = '';
+              
+                  let raw = null;
+                  try {
+                    raw = localStorage.getItem('reclamoenergia_last_doc');
+                  } catch(e){}
+              
+                  if(!raw){
+                    msg.textContent = "Non trovo il documento in questo browser. Torna indietro alla pagina del documento e riprova.";
+                    return;
+                  }
+              
+                  let payload;
+                  try {
+                    payload = JSON.parse(raw);
+                  } catch(e){
+                    msg.textContent = "Documento non valido. Torna indietro alla pagina del documento e riprova.";
+                    return;
+                  }
+              
+                  const text = payload.text || '';
+                  if(!text.trim()){
+                    msg.textContent = "Documento vuoto. Torna indietro alla pagina del documento e riprova.";
+                    return;
+                  }
+              
+                  const { jsPDF } = window.jspdf;
+                  const doc = new jsPDF({ unit: "pt", format: "a4" });
+              
+                  const pageWidth = doc.internal.pageSize.getWidth();
+                  const pageHeight = doc.internal.pageSize.getHeight();
+              
+                  const margin = 56;
+                  const maxWidth = pageWidth - margin*2;
+                  const lineHeight = 16;
+              
+                  doc.setFont("times", "normal");
+                  doc.setFontSize(12);
+              
+                  const lines = doc.splitTextToSize(text, maxWidth);
+              
+                  let y = margin;
+                  for (let i = 0; i < lines.length; i++) {
+                    if (y > pageHeight - margin) {
+                      doc.addPage();
+                      y = margin;
+                    }
+                    doc.text(lines[i], margin, y);
+                    y += lineHeight;
+                  }
+              
+                  const filename = payload.filename || "ReclamoEnergia.pdf";
+                  doc.save(filename);
+                  msg.textContent = "PDF scaricato ✅";
+                }
+              </script>
+
+  
 </body>
 </html>
