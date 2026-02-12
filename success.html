@@ -34,30 +34,19 @@
           Il tuo documento è stato generato correttamente. Puoi scaricarlo in formato PDF e inviarlo al fornitore.
         </p>
 
-      <button class="btn" style="background:#2E8B57;border-color:#2E8B57;" onclick="downloadPdf()">Scarica PDF</button>
-      <div class="small" id="pdfMsg" style="margin-top:10px;"></div>
+   <button
+  class="btn"
+  type="button"
+  style="background:#2E8B57;border-color:#2E8B57;cursor:pointer;"
+  onclick="downloadPdf()"
+>
+  Scarica PDF
+</button>
+<div class="small" id="pdfMsg" style="margin-top:10px;"></div>
 
-     <div class="box">
-        <b>Prossimi passi</b>
-        <div class="small">
-          1) Scarica il PDF del documento cliccando sul pulsante qui sopra.<br>
-          2) Invia il documento via email o PEC al tuo fornitore.<br>
-          3) Conserva copia del messaggio inviato e dell’eventuale ricevuta.<br><br>
-          Se non ricevi risposta entro un termine ragionevole, potrai utilizzare il documento come prova dell’avvenuta comunicazione.
-        </div>
-      </div>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
-
-      <div class="small">
-        Il servizio fornisce modelli standard di comunicazione e non costituisce consulenza legale.
-      </div>
-    </div>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-
-              <script>
-                <script>
-                 
+<script>
 function downloadPdf(){
   const msg = document.getElementById('pdfMsg');
   msg.textContent = '';
@@ -94,7 +83,8 @@ function downloadPdf(){
   const maxWidth = pageWidth - margin * 2;
   const lineGap = 18;
 
-  // Helpers
+  let y = margin;
+
   const newPageIfNeeded = () => {
     if (y > pageHeight - margin) {
       doc.addPage();
@@ -105,54 +95,44 @@ function downloadPdf(){
   doc.setFont("times", "normal");
   doc.setFontSize(12);
 
-  let y = margin;
-
-  // Spezza in righe originali (manteniamo i "vuoti" come spazi)
   const lines = text.split("\n");
 
-  // 1) MITTENTE: fino a "Spett.le"
+  // MITTENTE fino a "Spett.le"
   let i = 0;
   while (i < lines.length && !lines[i].trim().startsWith("Spett.le")) {
     const s = lines[i].trimEnd();
-    if (s.trim() === "") {
-      y += 10;
-    } else {
-      const wrapped = doc.splitTextToSize(s, maxWidth);
-      for (const w of wrapped) {
-        newPageIfNeeded();
-        doc.text(w, margin, y);
-        y += lineGap;
-      }
+    if (s.trim() === "") { y += 10; i++; continue; }
+
+    const wrapped = doc.splitTextToSize(s, maxWidth);
+    for (const w of wrapped) {
+      newPageIfNeeded();
+      doc.text(w, margin, y);
+      y += lineGap;
     }
     i++;
   }
 
-  // Spazio prima del destinatario
   y += 16;
 
-  // 2) DESTINATARIO: da "Spett.le" fino a "Oggetto:"
-  // Lo stampiamo in alto a destra (stile lettera)
+  // DESTINATARIO (da Spett.le a Oggetto:)
   let destLines = [];
   while (i < lines.length && !lines[i].trim().startsWith("Oggetto:")) {
     if (lines[i].trim() !== "") destLines.push(lines[i].trimEnd());
     i++;
   }
 
-  // stampa destinatario in colonna a destra (in alto, ma senza sovrapporsi al mittente)
   const destX = pageWidth - margin;
-  let destY = margin; // in alto
-  doc.setFont("times", "normal");
+  let destY = margin;
   for (let d = 0; d < destLines.length; d++) {
     doc.text(destLines[d], destX, destY + d * lineGap, { align: "right" });
   }
 
-  // linea leggera di separazione
   y = Math.max(y, destY + destLines.length * lineGap + 18);
   doc.setDrawColor(210);
   doc.line(margin, y, pageWidth - margin, y);
   y += 22;
 
-  // 3) OGGETTO
+  // OGGETTO
   let oggetto = "";
   if (i < lines.length && lines[i].trim().startsWith("Oggetto:")) {
     oggetto = lines[i].trimEnd();
@@ -169,14 +149,10 @@ function downloadPdf(){
   doc.setFont("times", "normal");
   y += 10;
 
-  // 4) CORPO
+  // CORPO
   for (; i < lines.length; i++) {
     const s = lines[i].trimEnd();
-
-    if (s.trim() === "") {
-      y += 10;
-      continue;
-    }
+    if (s.trim() === "") { y += 10; continue; }
 
     const wrapped = doc.splitTextToSize(s, maxWidth);
     for (const w of wrapped) {
@@ -186,19 +162,14 @@ function downloadPdf(){
     }
   }
 
-  // footer discreto
   doc.setFontSize(9);
   doc.setTextColor(130);
   doc.text("Documento generato tramite ReclamoEnergia", margin, pageHeight - 28);
-  doc.setTextColor(0);
-  doc.setFontSize(12);
 
   doc.save(filename);
   msg.textContent = "PDF scaricato ✅";
 }
 </script>
-
-              </script>
 
   
 </body>
