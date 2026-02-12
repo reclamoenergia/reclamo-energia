@@ -157,11 +157,6 @@ doc.text("Data: " + formatted, pageWidth - margin, pageHeight - 140, { align: "r
 doc.text("Firma", pageWidth - margin, pageHeight - 100, { align: "right" });
 doc.text("________________________", pageWidth - margin, pageHeight - 80, { align: "right" });
 
-// --- Footer discreto ---
-doc.setFontSize(9);
-doc.setTextColor(140);
-doc.text("Documento generato tramite ReclamoEnergia", margin, pageHeight - 30);
-
 doc.save(filename);
 
 
