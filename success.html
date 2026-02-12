@@ -123,14 +123,17 @@ for (let d = 0; d < destLines.length; d++) {
 }
 
 // Allineiamo y sotto il blocco più basso
-y = Math.max(y, destStartY + destLines.length * lineGap) + 40;
+y = Math.max(y, destStartY + destLines.length * lineGap) + 55;
 
 // --- OGGETTO ---
 if (i < lines.length && lines[i].trim().startsWith("Oggetto:")) {
-  doc.setFont("times", "bold");
-  doc.text(lines[i].trim(), margin, y);
-  doc.setFont("times", "normal");
-  y += 30;
+    doc.setFont("times", "bold");
+    doc.setFontSize(13);
+    doc.text(lines[i].trim(), margin, y);
+    doc.setFontSize(12);
+    doc.setFont("times", "normal");
+    y += 34;
+
   i++;
 }
 
@@ -148,14 +151,7 @@ for (; i < lines.length; i++) {
   y += wrapped.length * lineGap;
 }
 
-// --- DATA (allineata a destra sopra firma) ---
-const today = new Date();
-const formatted = today.toLocaleDateString("it-IT");
-doc.text("Data: " + formatted, pageWidth - margin, pageHeight - 140, { align: "right" });
 
-// --- FIRMA ---
-doc.text("Firma", pageWidth - margin, pageHeight - 100, { align: "right" });
-doc.text("________________________", pageWidth - margin, pageHeight - 80, { align: "right" });
 
 doc.save(filename);
 
