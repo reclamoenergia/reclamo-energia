@@ -8,7 +8,16 @@
     :root{--blue:#2F5FA7;--green:#2E8B57;--bg:#f4f6f8;--muted:#6b7280;}
     body{font-family:Arial,sans-serif;margin:0;background:var(--bg);color:#111827;}
     .wrap{max-width:720px;margin:0 auto;padding:28px 16px 60px;}
-    .card{background:#fff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:22px;text-align:center;}
+    .card{
+        position: relative;     /* crea contesto e limita overlay */
+        z-index: 1;             /* assicura che la card stia sopra */
+        background:#fff;
+        border-radius:14px;
+        box-shadow:0 6px 18px rgba(0,0,0,.08);
+        padding:22px;
+        text-align:center;
+      }
+
     h1{margin:0 0 10px;color:var(--green);font-size:26px}
     p{margin:0 0 14px;color:var(--muted);line-height:1.45}
     .btn{
@@ -37,9 +46,8 @@
    <button
   class="btn"
   type="button"
-  style="background:#2E8B57;border-color:#2E8B57;cursor:pointer;"
-  onclick="downloadPdf()"
->
+  style="background:#2E8B57;border-color:#2E8B57;cursor:pointer;position:relative;z-index:9999;"
+  onclick="downloadPdf()">
   Scarica PDF
 </button>
 <div class="small" id="pdfMsg" style="margin-top:10px;"></div>
