@@ -27,10 +27,17 @@
       <p>Scegli l’opzione che ti serve. Nel prossimo passo inserirai pochi dati e vedrai il testo completo prima di scaricare il PDF.</p>
 
       <div class="grid">
-        <a class="tile" href="form.html?type=reclamo">
-          <h3>Reclamo bolletta</h3>
-          <p class="small">Importo anomalo, lettura stimata, doppia fatturazione.</p>
-        </a>
+        <div class="tile" style="border:1px solid #e5e7eb;border-radius:14px;padding:16px;background:#fff;">
+  <h3 style="margin:0 0 6px;color:#2F5FA7;font-size:18px">Reclamo bolletta</h3>
+  <p class="small">Seleziona il motivo e genera il reclamo corretto.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;">
+    <a class="btn" href="form.html?type=reclamo&reason=importo">Importo anomalo</a>
+    <a class="btn" href="form.html?type=reclamo&reason=stimata">Lettura stimata errata</a>
+    <a class="btn" href="form.html?type=reclamo&reason=doppia">Doppia fatturazione</a>
+    <a class="btn" href="form.html?type=reclamo&reason=voci">Voci non previste</a>
+  </div>
+</div>
+
         <a class="tile" href="form.html?type=rateizzazione">
           <h3>Richiesta rateizzazione</h3>
           <p class="small">Chiedi un piano di pagamento in modo formale.</p>
