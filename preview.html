@@ -117,7 +117,7 @@
   const T = (value) => value ? `${value}\n` : '';
 
   // Riga PEC fornitore (solo se presente)
-  const PEC_DEST = data.pecFornitore ? `Inviata a mezzo PEC all’indirizzo: ${data.pecFornitore}\n` : '';
+  const PEC_DEST = data.pecFornitore ? ` ${data.pecFornitore}\n` : '';
 
   const oggi = new Date();
   const dd = String(oggi.getDate()).padStart(2,'0');
