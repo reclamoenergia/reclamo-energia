@@ -198,6 +198,12 @@ const params = new URLSearchParams(location.search);
 const type = params.get('type') || 'reclamo';
 const reason = params.get('reason') || '';
 
+gtag('event', 'form_started', {
+event_category: 'engagement',
+form_type: type,
+reason
+});
+
 const title = document.getElementById('title');
 const map = {
 reclamo: 'Compila i dati – Reclamo bolletta',
