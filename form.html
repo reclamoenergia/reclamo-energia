@@ -8,10 +8,10 @@
     :root{--blue:#2F5FA7;--green:#2E8B57;--bg:#f4f6f8;--muted:#6b7280;}
     body{font-family:Arial,sans-serif;margin:0;background:var(--bg);color:#111827;}
     .wrap{max-width:920px;margin:0 auto;padding:28px 16px 60px;}
-    .card{background:#fff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:22px;}
+    .card{background:#fff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:22px;position:relative;}
     h1{margin:0 0 8px;color:var(--blue);font-size:24px}
     p{margin:0 0 16px;color:var(--muted);line-height:1.45}
-    .progress{display:flex;gap:8px;margin:14px 0 18px}
+    .progress{display:flex;gap:8px;margin:14px 0 18px;pointer-events:none;}
     .bar{flex:1;height:10px;border-radius:999px;background:#e5e7eb}
     .bar.on{background:#c7d2fe}
     .row{display:grid;grid-template-columns:1fr;gap:12px}
@@ -22,7 +22,7 @@
       font-size:16px;background:#fff;
     }
     textarea{min-height:90px}
-    .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+    .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap;position:relative;z-index:5}
     .btn{
       padding:12px 16px;border-radius:10px;border:1px solid #d1d5db;
       background:#f9fafb;color:#111827;font-weight:800;font-size:16px;text-decoration:none;cursor:pointer;
@@ -32,6 +32,7 @@
     .hidden{display:none}
     .back{display:inline-block;margin-top:14px;color:var(--blue);text-decoration:none;font-weight:700}
     .hint{font-size:12px;color:var(--muted);margin-top:6px}
+    #altroBox{display:none;margin-top:12px}
   </style>
 </head>
 <body>
@@ -76,7 +77,7 @@
           </div>
         </div>
 
-        <div class="row" id="altroBox" style="margin-top:12px" class="hidden">
+        <div class="row" id="altroBox">
           <div>
             <label>Nome società (Altro)</label>
             <input id="altroNome" placeholder="Es. XYZ Energia S.p.A.">
@@ -89,7 +90,7 @@
 
         <div class="actions">
           <a class="btn" href="azione.html">← Indietro</a>
-          <button class="btn primary" onclick="next(2)">Continua</button>
+          <button class="btn primary" type="button" onclick="next(2)">Continua</button>
         </div>
       </div>
 
@@ -103,7 +104,11 @@
           <div>
             <label>Email</label>
             <input id="email" placeholder="Es. mario@email.it">
-            <input id="pec" placeholder="Indirizzo PEC (facoltativo)">
+            <div class="hint">Inserisci un’email valida per eventuali comunicazioni.</div>
+          </div>
+          <div>
+            <label>PEC (facoltativa)</label>
+            <input id="pec" placeholder="Es. nome@pec.it">
           </div>
           <div>
             <label>Indirizzo (residenza)</label>
@@ -116,8 +121,8 @@
         </div>
 
         <div class="actions">
-          <button class="btn" onclick="next(1)">Indietro</button>
-          <button class="btn primary" onclick="next(3)">Continua</button>
+          <button class="btn" type="button" onclick="next(1)">Indietro</button>
+          <button class="btn primary" type="button" onclick="next(3)">Continua</button>
         </div>
       </div>
 
@@ -151,7 +156,7 @@
         </div>
 
         <div class="actions">
-          <button class="btn" onclick="next(2)">Indietro</button>
+          <button class="btn" type="button" onclick="next(2)">Indietro</button>
           <a class="btn primary" id="generaBtn" href="preview.html">Genera documento</a>
         </div>
       </div>
@@ -161,20 +166,12 @@
   </div>
 
 <script>
-  // Mostra/nasconde campi "Altro fornitore"
-  const fornitore = document.getElementById('fornitore');
-  const altroBox = document.getElementById('altroBox');
-  fornitore.addEventListener('change', () => {
-    if (fornitore.value === 'Altro') altroBox.style.display = 'grid';
-    else altroBox.style.display = 'none';
-  });
-  altroBox.style.display = 'none';
-
-  // Imposta titolo in base al tipo (da querystring)
+  // Querystring
   const params = new URLSearchParams(location.search);
   const type = params.get('type') || 'reclamo';
   const reason = params.get('reason') || '';
 
+  // Titolo pagina
   const title = document.getElementById('title');
   const map = {
     reclamo: 'Compila i dati – Reclamo bolletta',
@@ -183,6 +180,23 @@
     voltura: 'Compila i dati – Voltura'
   };
   title.textContent = map[type] || 'Compila i dati';
+
+  // Mostra/nasconde campi "Altro fornitore"
+  const fornitore = document.getElementById('fornitore');
+  const altroBox = document.getElementById('altroBox');
+  const altroNome = document.getElementById('altroNome');
+  const altroCitta = document.getElementById('altroCitta');
+
+  function toggleAltro(){
+    const isAltro = (fornitore.value === 'Altro');
+    altroBox.style.display = isAltro ? 'grid' : 'none';
+    if(!isAltro){
+      altroNome.value = '';
+      altroCitta.value = '';
+    }
+  }
+  fornitore.addEventListener('change', toggleAltro);
+  toggleAltro();
 
   // Navigazione step
   function next(n){
@@ -199,62 +213,60 @@
     if(n===3){
       const a = document.getElementById('generaBtn');
       a.onclick = () => {
-  const get = (id) => (document.getElementById(id).value || '').trim();
+        const get = (id) => (document.getElementById(id).value || '').trim();
 
-  const dataObj = {
-    type,
-    reason,
-    fornitura: get('fornitura'),
-    fornitore: (fornitore.value === 'Altro') ? (get('altroNome') || 'Fornitore') : fornitore.value,
-    altroCitta: get('altroCitta'),
-    nome: get('nome'),
-    email: get('email'),
-    indirizzo: get('indirizzo'),
-    telefono: get('telefono'),
-    numCliente: get('numCliente'),
-    numFattura: get('numFattura'),
-    dataFattura: get('dataFattura'),
-    importo: get('importo'),
-    indirizzoFornitura: get('indirizzoFornitura'),
-    descrizione: get('descrizione')
-    pec: get('pec'),
+        const dataObj = {
+          type,
+          reason,
+          fornitura: get('fornitura'),
+          fornitore: (fornitore.value === 'Altro') ? (get('altroNome') || 'Fornitore') : fornitore.value,
+          altroCitta: get('altroCitta'),
+          nome: get('nome'),
+          email: get('email'),
+          pec: get('pec'),
+          indirizzo: get('indirizzo'),
+          telefono: get('telefono'),
+          numCliente: get('numCliente'),
+          numFattura: get('numFattura'),
+          dataFattura: get('dataFattura'),
+          importo: get('importo'),
+          indirizzoFornitura: get('indirizzoFornitura'),
+          descrizione: get('descrizione')
+        };
 
-  };
+        // Campi obbligatori minimi
+        let required = ['nome', 'email', 'fornitore'];
 
-  // Campi obbligatori per evitare documenti vuoti / monchi
-  let required = ['nome', 'email', 'fornitore'];
+        if (type === 'reclamo') {
+          required = required.concat(['numCliente', 'numFattura', 'dataFattura', 'importo', 'indirizzoFornitura']);
+        } else if (type === 'rateizzazione') {
+          required = required.concat(['numFattura', 'dataFattura', 'importo']);
+        } else if (type === 'contatore') {
+          required = required.concat(['numCliente', 'indirizzoFornitura']);
+        } else if (type === 'voltura') {
+          required = required.concat(['numCliente', 'indirizzoFornitura']);
+        }
 
-  if (type === 'reclamo') {
-    required = required.concat(['numCliente', 'numFattura', 'dataFattura', 'importo', 'indirizzoFornitura']);
-  } else if (type === 'rateizzazione') {
-    required = required.concat(['numFattura', 'dataFattura', 'importo']);
-  } else if (type === 'contatore') {
-    required = required.concat(['numCliente', 'indirizzoFornitura']);
-  } else if (type === 'voltura') {
-    required = required.concat(['numCliente', 'indirizzoFornitura']);
-  }
+        const labels = {
+          nome: 'Nome e Cognome',
+          email: 'Email',
+          fornitore: 'Fornitore',
+          numCliente: 'Numero cliente',
+          numFattura: 'Numero fattura',
+          dataFattura: 'Data fattura',
+          importo: 'Importo',
+          indirizzoFornitura: 'Indirizzo fornitura'
+        };
 
-  const labels = {
-    nome: 'Nome e Cognome',
-    email: 'Email',
-    fornitore: 'Fornitore',
-    numCliente: 'Numero cliente',
-    numFattura: 'Numero fattura',
-    dataFattura: 'Data fattura',
-    importo: 'Importo',
-    indirizzoFornitura: 'Indirizzo fornitura'
-  };
+        const missing = required.filter((k) => !dataObj[k]);
+        if (missing.length) {
+          alert('Completa questi campi:\n- ' + missing.map(m => labels[m] || m).join('\n- '));
+          return false;
+        }
 
-  const missing = required.filter((k) => !dataObj[k]);
-  if (missing.length) {
-    alert('Completa questi campi:\n- ' + missing.map(m => labels[m] || m).join('\n- '));
-    return false;
-  }
-
-  const qs = new URLSearchParams(dataObj).toString();
-  a.href = 'preview.html?' + qs;
-};
-
+        const qs = new URLSearchParams(dataObj).toString();
+        a.href = 'preview.html?' + qs;
+      };
     }
   }
 </script>
