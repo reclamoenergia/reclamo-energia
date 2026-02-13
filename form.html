@@ -1,274 +1,274 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <title>Compila i dati - ReclamoEnergia</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    :root{--blue:#2F5FA7;--green:#2E8B57;--bg:#f4f6f8;--muted:#6b7280;}
-    body{font-family:Arial,sans-serif;margin:0;background:var(--bg);color:#111827;}
-    .wrap{max-width:920px;margin:0 auto;padding:28px 16px 60px;}
-    .card{background:#fff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:22px;position:relative;}
-    h1{margin:0 0 8px;color:var(--blue);font-size:24px}
-    p{margin:0 0 16px;color:var(--muted);line-height:1.45}
-    .progress{display:flex;gap:8px;margin:14px 0 18px;pointer-events:none;}
-    .bar{flex:1;height:10px;border-radius:999px;background:#e5e7eb}
-    .bar.on{background:#c7d2fe}
-    .row{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:760px){.row{grid-template-columns:1fr 1fr}}
-    label{font-size:14px;color:#111827;font-weight:700}
-    input, select, textarea{
-      width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;
-      font-size:16px;background:#fff;
-    }
-    textarea{min-height:90px}
-    .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap;position:relative;z-index:5}
-    .btn{
-      padding:12px 16px;border-radius:10px;border:1px solid #d1d5db;
-      background:#f9fafb;color:#111827;font-weight:800;font-size:16px;text-decoration:none;cursor:pointer;
-    }
-    .btn.primary{background:var(--green);border-color:var(--green);color:#fff}
-    .btn:hover{opacity:.93}
-    .hidden{display:none}
-    .back{display:inline-block;margin-top:14px;color:var(--blue);text-decoration:none;font-weight:700}
-    .hint{font-size:12px;color:var(--muted);margin-top:6px}
-    #altroBox{display:none;margin-top:12px}
-  </style>
+<meta charset="UTF-8">
+<title>Compila i dati - ReclamoEnergia</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root{--blue:#2F5FA7;--green:#2E8B57;--bg:#f4f6f8;--muted:#6b7280;}
+body{font-family:Arial,sans-serif;margin:0;background:var(--bg);color:#111827;}
+.wrap{max-width:920px;margin:0 auto;padding:28px 16px 60px;}
+.card{background:#fff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:22px;}
+h1{margin:0 0 8px;color:var(--blue);font-size:24px}
+p{margin:0 0 16px;color:var(--muted);line-height:1.45}
+.progress{display:flex;gap:8px;margin:14px 0 18px;pointer-events:none;}
+.bar{flex:1;height:10px;border-radius:999px;background:#e5e7eb}
+.bar.on{background:#c7d2fe}
+.row{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:760px){.row{grid-template-columns:1fr 1fr}}
+label{font-size:14px;font-weight:700}
+input, select, textarea{
+width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;
+font-size:16px;background:#fff;
+}
+textarea{min-height:90px}
+.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.btn{
+padding:12px 16px;border-radius:10px;border:1px solid #d1d5db;
+background:#f9fafb;font-weight:800;font-size:16px;cursor:pointer;
+}
+.btn.primary{background:var(--green);border-color:var(--green);color:#fff}
+.hidden{display:none}
+.back{display:inline-block;margin-top:14px;color:var(--blue);text-decoration:none;font-weight:700}
+.hint{font-size:12px;color:var(--muted);margin-top:6px}
+#altroBox{display:none;margin-top:12px}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h1 id="title">Compila i dati</h1>
-      <p>Inserisci pochi dati. Nel prossimo passo vedrai il documento completo prima di scaricare il PDF.</p>
 
-      <div class="progress">
-        <div class="bar on" id="p1"></div>
-        <div class="bar" id="p2"></div>
-        <div class="bar" id="p3"></div>
-      </div>
+<div class="wrap">
+<div class="card">
 
-      <!-- STEP 1 -->
-      <div id="step1">
-        <div class="row">
-          <div>
-            <label>Tipo fornitura</label>
-            <select id="fornitura">
-              <option value="Luce">Luce</option>
-              <option value="Gas">Gas</option>
-            </select>
-          </div>
+<h1 id="title">Compila i dati</h1>
+<p>Inserisci pochi dati. Nel prossimo passo vedrai il documento completo prima di scaricare il PDF.</p>
 
-          <div>
-            <label>Fornitore</label>
-            <select id="fornitore">
-              <option value="Enel Energia">Enel Energia</option>
-              <option value="Eni Plenitude">Eni Plenitude</option>
-              <option value="Edison Energia">Edison Energia</option>
-              <option value="Sorgenia">Sorgenia</option>
-              <option value="A2A Energia">A2A Energia</option>
-              <option value="Iren Mercato">Iren Mercato</option>
-              <option value="Acea Energia">Acea Energia</option>
-              <option value="Hera Comm">Hera Comm</option>
-              <option value="Illumia">Illumia</option>
-              <option value="Servizio Elettrico Nazionale">Servizio Elettrico Nazionale</option>
-              <option value="Altro">Altro (inserisci manualmente)</option>
-            </select>
-            <div class="hint">Se non trovi il tuo fornitore, scegli “Altro”.</div>
-          </div>
-        </div>
+<div class="progress">
+<div class="bar on" id="p1"></div>
+<div class="bar" id="p2"></div>
+<div class="bar" id="p3"></div>
+</div>
 
-        <div class="row" id="altroBox">
-          <div>
-            <label>Nome società (Altro)</label>
-            <input id="altroNome" placeholder="Es. XYZ Energia S.p.A.">
-          </div>
-          <div>
-            <label>Città società (Altro)</label>
-            <input id="altroCitta" placeholder="Es. Milano">
-          </div>
-        </div>
+<!-- STEP 1 -->
+<div id="step1">
 
-        <div class="actions">
-          <a class="btn" href="azione.html">← Indietro</a>
-          <button class="btn primary" type="button" onclick="next(2)">Continua</button>
-        </div>
-      </div>
+<div class="row">
+<div>
+<label>Tipo fornitura</label>
+<select id="fornitura">
+<option value="Luce">Luce</option>
+<option value="Gas">Gas</option>
+</select>
+</div>
 
-      <!-- STEP 2 -->
-      <div id="step2" class="hidden">
-        <div class="row">
-          <div>
-            <label>Nome e Cognome</label>
-            <input id="nome" placeholder="Es. Mario Rossi">
-          </div>
-          <div>
-            <label>Email</label>
-            <input id="email" placeholder="Es. mario@email.it">
-            <div class="hint">Inserisci un’email valida per eventuali comunicazioni.</div>
-          </div>
-          <div>
-            <label>PEC (facoltativa)</label>
-            <input id="pec" placeholder="Es. nome@pec.it">
-          </div>
-          <div>
-            <label>Indirizzo (residenza)</label>
-            <input id="indirizzo" placeholder="Via ... , n. ...">
-          </div>
-          <div>
-            <label>Telefono (facoltativo)</label>
-            <input id="telefono" placeholder="Es. 333...">
-          </div>
-        </div>
+<div>
+<label>Fornitore</label>
+<select id="fornitore">
+<option value="Enel Energia">Enel Energia</option>
+<option value="Eni Plenitude">Eni Plenitude</option>
+<option value="Edison Energia">Edison Energia</option>
+<option value="Sorgenia">Sorgenia</option>
+<option value="A2A Energia">A2A Energia</option>
+<option value="Iren Mercato">Iren Mercato</option>
+<option value="Acea Energia">Acea Energia</option>
+<option value="Hera Comm">Hera Comm</option>
+<option value="Illumia">Illumia</option>
+<option value="Servizio Elettrico Nazionale">Servizio Elettrico Nazionale</option>
+<option value="Altro">Altro (inserisci manualmente)</option>
+</select>
+<div class="hint">Se non trovi il tuo fornitore, scegli “Altro”.</div>
+</div>
+</div>
 
-        <div class="actions">
-          <button class="btn" type="button" onclick="next(1)">Indietro</button>
-          <button class="btn primary" type="button" onclick="next(3)">Continua</button>
-        </div>
-      </div>
+<div style="margin-top:12px">
+<label>PEC del fornitore</label>
+<input id="pecFornitore" placeholder="Si compila automaticamente (puoi modificarla)">
+</div>
 
-      <!-- STEP 3 -->
-      <div id="step3" class="hidden">
-        <div class="row">
-          <div>
-            <label>Numero cliente</label>
-            <input id="numCliente" placeholder="Es. 12345678">
-          </div>
-          <div>
-            <label>Numero fattura</label>
-            <input id="numFattura" placeholder="Es. FT-2026-001">
-          </div>
-          <div>
-            <label>Data fattura</label>
-            <input id="dataFattura" placeholder="Es. 11/02/2026">
-          </div>
-          <div>
-            <label>Importo (€)</label>
-            <input id="importo" placeholder="Es. 189,50">
-          </div>
-          <div>
-            <label>Indirizzo fornitura</label>
-            <input id="indirizzoFornitura" placeholder="Es. Via ... , n. ...">
-          </div>
-          <div>
-            <label>Descrizione breve (facoltativo)</label>
-            <textarea id="descrizione" placeholder="Es. Importo molto superiore ai consumi abituali..."></textarea>
-          </div>
-        </div>
+<div id="altroBox" class="row">
+<div>
+<label>Nome società (Altro)</label>
+<input id="altroNome" placeholder="Es. XYZ Energia S.p.A.">
+</div>
+<div>
+<label>Città società (Altro)</label>
+<input id="altroCitta" placeholder="Es. Milano">
+</div>
+</div>
 
-        <div class="actions">
-          <button class="btn" type="button" onclick="next(2)">Indietro</button>
-          <a class="btn primary" id="generaBtn" href="preview.html">Genera documento</a>
-        </div>
-      </div>
+<div class="actions">
+<button class="btn primary" type="button" onclick="next(2)">Continua</button>
+</div>
 
-      <a class="back" href="./">← Torna alla homepage</a>
-    </div>
-  </div>
+</div>
+
+<!-- STEP 2 -->
+<div id="step2" class="hidden">
+
+<div class="row">
+<div>
+<label>Nome e Cognome</label>
+<input id="nome">
+</div>
+
+<div>
+<label>Email</label>
+<input id="email">
+</div>
+
+<div>
+<label>PEC personale (facoltativa)</label>
+<input id="pec">
+</div>
+
+<div>
+<label>Indirizzo</label>
+<input id="indirizzo">
+</div>
+
+<div>
+<label>Telefono (facoltativo)</label>
+<input id="telefono">
+</div>
+</div>
+
+<div class="actions">
+<button class="btn" type="button" onclick="next(1)">Indietro</button>
+<button class="btn primary" type="button" onclick="next(3)">Continua</button>
+</div>
+
+</div>
+
+<!-- STEP 3 -->
+<div id="step3" class="hidden">
+
+<div class="row">
+<div><label>Numero cliente</label><input id="numCliente"></div>
+<div><label>Numero fattura</label><input id="numFattura"></div>
+<div><label>Data fattura</label><input id="dataFattura"></div>
+<div><label>Importo (€)</label><input id="importo"></div>
+<div><label>Indirizzo fornitura</label><input id="indirizzoFornitura"></div>
+<div><label>Descrizione breve (facoltativo)</label><textarea id="descrizione"></textarea></div>
+</div>
+
+<div class="actions">
+<button class="btn" type="button" onclick="next(2)">Indietro</button>
+<a class="btn primary" id="generaBtn" href="preview.html">Genera documento</a>
+</div>
+
+</div>
+
+<a class="back" href="./">← Torna alla homepage</a>
+
+</div>
+</div>
 
 <script>
-  // Querystring
-  const params = new URLSearchParams(location.search);
-  const type = params.get('type') || 'reclamo';
-  const reason = params.get('reason') || '';
 
-  // Titolo pagina
-  const title = document.getElementById('title');
-  const map = {
-    reclamo: 'Compila i dati – Reclamo bolletta',
-    rateizzazione: 'Compila i dati – Richiesta rateizzazione',
-    contatore: 'Compila i dati – Verifica contatore',
-    voltura: 'Compila i dati – Voltura'
-  };
-  title.textContent = map[type] || 'Compila i dati';
+const params = new URLSearchParams(location.search);
+const type = params.get('type') || 'reclamo';
+const reason = params.get('reason') || '';
 
-  // Mostra/nasconde campi "Altro fornitore"
-  const fornitore = document.getElementById('fornitore');
-  const altroBox = document.getElementById('altroBox');
-  const altroNome = document.getElementById('altroNome');
-  const altroCitta = document.getElementById('altroCitta');
+const title = document.getElementById('title');
+const map = {
+reclamo: 'Compila i dati – Reclamo bolletta',
+rateizzazione: 'Compila i dati – Richiesta rateizzazione',
+contatore: 'Compila i dati – Verifica contatore',
+voltura: 'Compila i dati – Voltura'
+};
+title.textContent = map[type] || 'Compila i dati';
 
-  function toggleAltro(){
-    const isAltro = (fornitore.value === 'Altro');
-    altroBox.style.display = isAltro ? 'grid' : 'none';
-    if(!isAltro){
-      altroNome.value = '';
-      altroCitta.value = '';
-    }
-  }
-  fornitore.addEventListener('change', toggleAltro);
-  toggleAltro();
+const fornitore = document.getElementById('fornitore');
+const altroBox = document.getElementById('altroBox');
+const pecFornitore = document.getElementById('pecFornitore');
 
-  // Navigazione step
-  function next(n){
-    document.getElementById('step1').classList.add('hidden');
-    document.getElementById('step2').classList.add('hidden');
-    document.getElementById('step3').classList.add('hidden');
-    document.getElementById('step'+n).classList.remove('hidden');
+const SUPPLIER_PEC = {
+"Enel Energia": "servizio.clienti.enelenergia@pec.enel.it",
+"Eni Plenitude": "clienti@pec.eniplenitude.com",
+"Edison Energia": "edisonenergia@pec.edison.it",
+"Sorgenia": "sorgenia@legalmail.it",
+"A2A Energia": "a2a.energia@pec.a2a.eu",
+"Iren Mercato": "irenspa@pec.gruppoiren.it",
+"Acea Energia": "ae.spa@pec.aceaspa.it",
+"Hera Comm": "heracomm@pec.gruppohera.it",
+"Illumia": "illumia@pec.illumia.it",
+"Servizio Elettrico Nazionale": "servizio.clienti@pec.servizioelettriconazionale.it"
+};
 
-    document.getElementById('p1').classList.toggle('on', n>=1);
-    document.getElementById('p2').classList.toggle('on', n>=2);
-    document.getElementById('p3').classList.toggle('on', n>=3);
+function toggleAltro(){
+const isAltro = fornitore.value === 'Altro';
+altroBox.style.display = isAltro ? 'grid' : 'none';
+if(!isAltro){
+document.getElementById('altroNome').value='';
+document.getElementById('altroCitta').value='';
+}
+}
 
-    // Costruisce link verso preview con i dati in URL (MVP senza database)
-    if(n===3){
-      const a = document.getElementById('generaBtn');
-      a.onclick = () => {
-        const get = (id) => (document.getElementById(id).value || '').trim();
+function autofillPec(){
+if(fornitore.value === 'Altro'){
+pecFornitore.value='';
+return;
+}
+pecFornitore.value = SUPPLIER_PEC[fornitore.value] || '';
+}
 
-        const dataObj = {
-          type,
-          reason,
-          fornitura: get('fornitura'),
-          fornitore: (fornitore.value === 'Altro') ? (get('altroNome') || 'Fornitore') : fornitore.value,
-          altroCitta: get('altroCitta'),
-          nome: get('nome'),
-          email: get('email'),
-          pec: get('pec'),
-          indirizzo: get('indirizzo'),
-          telefono: get('telefono'),
-          numCliente: get('numCliente'),
-          numFattura: get('numFattura'),
-          dataFattura: get('dataFattura'),
-          importo: get('importo'),
-          indirizzoFornitura: get('indirizzoFornitura'),
-          descrizione: get('descrizione')
-        };
+fornitore.addEventListener('change',()=>{
+toggleAltro();
+autofillPec();
+});
 
-        // Campi obbligatori minimi
-        let required = ['nome', 'email', 'fornitore'];
+toggleAltro();
+autofillPec();
 
-        if (type === 'reclamo') {
-          required = required.concat(['numCliente', 'numFattura', 'dataFattura', 'importo', 'indirizzoFornitura']);
-        } else if (type === 'rateizzazione') {
-          required = required.concat(['numFattura', 'dataFattura', 'importo']);
-        } else if (type === 'contatore') {
-          required = required.concat(['numCliente', 'indirizzoFornitura']);
-        } else if (type === 'voltura') {
-          required = required.concat(['numCliente', 'indirizzoFornitura']);
-        }
+function next(n){
+document.getElementById('step1').classList.add('hidden');
+document.getElementById('step2').classList.add('hidden');
+document.getElementById('step3').classList.add('hidden');
+document.getElementById('step'+n).classList.remove('hidden');
 
-        const labels = {
-          nome: 'Nome e Cognome',
-          email: 'Email',
-          fornitore: 'Fornitore',
-          numCliente: 'Numero cliente',
-          numFattura: 'Numero fattura',
-          dataFattura: 'Data fattura',
-          importo: 'Importo',
-          indirizzoFornitura: 'Indirizzo fornitura'
-        };
+document.getElementById('p1').classList.toggle('on', n>=1);
+document.getElementById('p2').classList.toggle('on', n>=2);
+document.getElementById('p3').classList.toggle('on', n>=3);
 
-        const missing = required.filter((k) => !dataObj[k]);
-        if (missing.length) {
-          alert('Completa questi campi:\n- ' + missing.map(m => labels[m] || m).join('\n- '));
-          return false;
-        }
+if(n===3){
+const a = document.getElementById('generaBtn');
+a.onclick = () => {
 
-        const qs = new URLSearchParams(dataObj).toString();
-        a.href = 'preview.html?' + qs;
-      };
-    }
-  }
+const get = id => (document.getElementById(id).value || '').trim();
+
+const dataObj = {
+type,
+reason,
+fornitura: get('fornitura'),
+fornitore: (fornitore.value==='Altro') ? get('altroNome') : fornitore.value,
+altroCitta: get('altroCitta'),
+pecFornitore: get('pecFornitore'),
+nome: get('nome'),
+email: get('email'),
+pec: get('pec'),
+indirizzo: get('indirizzo'),
+telefono: get('telefono'),
+numCliente: get('numCliente'),
+numFattura: get('numFattura'),
+dataFattura: get('dataFattura'),
+importo: get('importo'),
+indirizzoFornitura: get('indirizzoFornitura'),
+descrizione: get('descrizione')
+};
+
+const required = ['nome','email','fornitore'];
+const missing = required.filter(k=>!dataObj[k]);
+if(missing.length){
+alert("Completa Nome, Email e Fornitore.");
+return false;
+}
+
+const qs = new URLSearchParams(dataObj).toString();
+a.href = 'preview.html?'+qs;
+
+};
+}
+}
+
 </script>
 </body>
 </html>
