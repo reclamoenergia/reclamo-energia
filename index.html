@@ -30,6 +30,7 @@
       box-shadow: 0 6px 18px rgba(0,0,0,0.08);
       padding: 26px;
     }
+    .card + .card{margin-top:16px}
     .hero{
       text-align:center;
       padding: 26px 18px;
@@ -181,27 +182,79 @@
       font-size:15px;
     }
     .trust-box b{display:block;margin-bottom:4px}
+
+    .service-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+    @media (min-width: 760px){
+      .service-grid{grid-template-columns:1fr 1fr;}
+    }
+    .service-item{
+      background:#f8fafc;
+      border:1px solid #e2e8f0;
+      border-radius:12px;
+      padding:14px;
+      text-align:left;
+      line-height:1.45;
+    }
+    .service-item b{display:block;color:#0f172a;margin-bottom:4px}
+    .notice{
+      margin-top:12px;
+      font-size:14px;
+      color:#334155;
+      background:#fefce8;
+      border:1px solid #fde68a;
+      border-radius:10px;
+      padding:10px 12px;
+      text-align:left;
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card hero">
-      <h1>La bolletta ti sembra sbagliata?</h1>
-      <p class="sub">Compila pochi dati, genera il documento e scaricalo pronto per l’invio. Semplice, chiaro, senza complicazioni.</p>
+      <h1>Scriviamo il tuo reclamo energia, pronto da inviare</h1>
+      <p class="sub">ReclamoEnergia è un servizio online che trasforma i tuoi dati in un documento formale (PDF + testo email/PEC) da inviare al tuo fornitore luce o gas.</p>
 
       <div class="badges">
-        <div class="badge">✔ Paghi solo se scarichi</div>
-        <div class="badge">✔ Documento formale e ordinato</div>
-        <div class="badge">✔ Nessun abbonamento</div>
+        <div class="badge">✔ Documento pronto in pochi minuti</div>
+        <div class="badge">✔ PDF + testo copiabile per email/PEC</div>
+        <div class="badge">✔ Paghi solo quando scarichi</div>
       </div>
 
       <a class="cta" href="#azioni">Inizia ora</a>
       <div class="trust-box">
-        <b>ReclamoEnergia è un servizio digitale privato</b>
-        che ti aiuta a redigere correttamente un reclamo formale verso il tuo fornitore di luce o gas.<br><br>
-        Non siamo un ente pubblico e non riceviamo i reclami per conto dei fornitori.<br><br>
-        Il documento viene generato automaticamente sulla base dei dati che inserisci e rimane sotto il tuo controllo.
+        <b>Cosa fa davvero il servizio</b>
+        Tu inserisci i dati del caso, noi generiamo il testo formale già strutturato e pronto all'invio.<br><br>
+        <b>Cosa non facciamo</b>
+        Non siamo il tuo fornitore, non inviamo reclami al posto tuo e non sostituiamo un avvocato.
       </div>
+    </div>
+
+    <div class="card section">
+      <h2>Cosa ricevi acquistando il servizio</h2>
+      <div class="service-grid">
+        <div class="service-item">
+          <b>1) Documento completo</b>
+          Un reclamo/richiesta con dati cliente, riferimenti della bolletta, motivazione e richiesta finale in formato chiaro.
+        </div>
+        <div class="service-item">
+          <b>2) Versione PDF + testo</b>
+          Scarichi il PDF impaginato e una versione testuale da copiare in email o PEC.
+        </div>
+        <div class="service-item">
+          <b>3) Struttura adatta all'invio</b>
+          Il testo segue una struttura formale utile per comunicare con l'assistenza del fornitore.
+        </div>
+        <div class="service-item">
+          <b>4) Nessun vincolo</b>
+          Nessun abbonamento: paghi una sola volta solo se vuoi scaricare il documento.
+        </div>
+      </div>
+      <div class="notice">Il servizio è pensato per aiutarti a comunicare in modo chiaro con il fornitore. L'invio resta sempre sotto il tuo controllo.</div>
     </div>
 
     <div id="azioni" class="section">
