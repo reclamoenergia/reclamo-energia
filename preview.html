@@ -14,6 +14,7 @@
     .doc{
       background:#fff;border:1px solid #e5e7eb;border-radius:14px;
       padding:18px; line-height:1.55; font-size:15px; white-space:pre-wrap;
+      user-select:none; -webkit-user-select:none; -ms-user-select:none;
     }
     .watermark{position:relative;}
     .watermark:before{
@@ -125,189 +126,111 @@
   const yyyy = oggi.getFullYear();
   const dataOggi = `${dd}/${mm}/${yyyy}`;
 
+  const luogoData = `${data.altroCitta || 'Luogo'}, ${dataOggi}`;
+  const headerBlock = `${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('PEC', data.pec)}${L('Telefono', data.telefono)}`;
+  const recipientBlock = `Spett.le
+${data.fornitore}
+${type === 'reclamo' || type === 'contatore' ? 'Ufficio Reclami' : 'Ufficio Clienti'}
+${PEC_DEST}`;
+  const detailsBlock = [
+    data.numCliente ? `Codice cliente: ${data.numCliente}` : '',
+    data.numFattura ? `Fattura di riferimento: n. ${data.numFattura} del ${data.dataFattura || '___'}` : '',
+    data.indirizzoFornitura ? `Punto di fornitura: ${data.indirizzoFornitura}` : ''
+  ].filter(Boolean).join('\n');
+
+  const composeLetter = (subject, opening, request, regulationRef) => `${headerBlock}
+
+${recipientBlock}
+Oggetto: ${subject}
+
+${detailsBlock ? `${detailsBlock}\n\n` : ''}${opening}
+
+${request}
+
+${regulationRef}
+
+Resto in attesa di un riscontro scritto.
+
+Luogo e data: ${luogoData}
+
+Firma
+________________________
+${data.nome}`.trim();
+
   let testo = "";
 
   if(type === "reclamo") {
 
     if(reason === "stimata") {
-      testo = `
-${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('PEC', data.pec)}${L('Telefono', data.telefono)}
-
-Spett.le
-${data.fornitore}
-Ufficio Reclami
-${PEC_DEST}
-Oggetto: Reclamo per lettura stimata non corretta – fattura n. ${data.numFattura}
-
-Con riferimento alla fattura n. ${data.numFattura}, emessa in data ${data.dataFattura}, relativa alla fornitura di ${data.fornitura} presso ${data.indirizzoFornitura}, segnalo che gli importi risultano calcolati sulla base di letture stimate non corrispondenti ai consumi effettivi.
-
-Chiedo pertanto la verifica delle letture e l’emissione di eventuale fattura rettificativa sulla base dei consumi reali.
-
-Resto in attesa di cortese riscontro.
-
-Data: ${dataOggi}
-
-Firma
-________________________
-${data.nome}
-      `.trim();
+      testo = composeLetter(
+        `Reclamo per lettura stimata non corretta – fattura n. ${data.numFattura}`,
+        `Con riferimento alla fattura indicata, segnalo che gli importi risultano calcolati sulla base di letture stimate non coerenti con i consumi effettivi della fornitura di ${data.fornitura}.`,
+        'Chiedo la verifica puntuale delle letture, la ricostruzione dei consumi reali e l’emissione di eventuale fattura rettificativa con storno degli importi non dovuti.',
+        'La presente è formulata ai sensi della regolazione ARERA in materia di qualità commerciale (TIQV), con richiesta di riscontro entro i termini previsti.'
+      );
     }
 
     else if(reason === "doppia") {
-      testo = `
-${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('PEC', data.pec)}${L('Telefono', data.telefono)}
-
-Spett.le
-${data.fornitore}
-Ufficio Reclami
-${PEC_DEST}
-Oggetto: Reclamo per doppia fatturazione – fattura n. ${data.numFattura}
-
-Con la presente segnalo la presenza di una possibile doppia fatturazione relativa alla fornitura presso ${data.indirizzoFornitura}, codice cliente ${data.numCliente}.
-
-La fattura n. ${data.numFattura}, dell’importo di ${data.importo} €, sembra riferirsi a periodi già oggetto di precedente fatturazione.
-
-Chiedo pertanto verifica e annullamento degli importi eventualmente non dovuti.
-
-Distinti saluti.
-
-Data: ${dataOggi}
-
-Firma
-________________________
-${data.nome}
-      `.trim();
+      testo = composeLetter(
+        `Reclamo per possibile doppia fatturazione – fattura n. ${data.numFattura}`,
+        `Con la presente segnalo una possibile doppia fatturazione relativa alla fornitura di ${data.fornitura}, con addebiti che paiono riferiti a periodi già fatturati.`,
+        `Chiedo una verifica amministrativa completa e l’annullamento/storno degli importi non dovuti, con emissione di documento rettificativo.`,
+        'La richiesta è presentata nel rispetto della disciplina ARERA sulla trasparenza e correttezza della fatturazione e dell’art. 33 del Codice di condotta commerciale.'
+      );
     }
 
     else if(reason === "voci") {
-      testo = `
-${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('PEC', data.pec)}${L('Telefono', data.telefono)}
-
-Spett.le
-${data.fornitore}
-Ufficio Reclami
-${PEC_DEST}
-Oggetto: Reclamo per addebito di voci non previste – fattura n. ${data.numFattura}
-
-Con riferimento alla fattura n. ${data.numFattura}, dell’importo di ${data.importo} €, segnalo la presenza di voci di spesa non previste o non espressamente autorizzate.
-
-Chiedo cortesemente dettagliata spiegazione delle stesse e, ove non dovute, la loro immediata rettifica.
-
-Resto in attesa di cortese riscontro.
-
-Data: ${dataOggi}
-
-Firma
-________________________
-${data.nome}
-      `.trim();
+      testo = composeLetter(
+        `Reclamo per addebito di voci non previste – fattura n. ${data.numFattura}`,
+        `Con riferimento alla fattura indicata, rilevo la presenza di voci di costo non previste dal contratto o non adeguatamente motivate in bolletta.`,
+        'Chiedo il dettaglio analitico degli addebiti e, ove non dovuti, la rettifica immediata della fattura con relativo storno.',
+        'La presente è inviata in coerenza con gli obblighi di trasparenza informativa previsti dalla regolazione ARERA e dal Codice del Consumo (D.Lgs. 206/2005).'
+      );
     }
 
     else {
       // IMPORTO ANOMALO (default)
-      testo = `
-${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('PEC', data.pec)}${L('Telefono', data.telefono)}
-
-Spett.le
-${data.fornitore}
-Ufficio Reclami
-${PEC_DEST}
-Oggetto: Reclamo formale relativo alla fattura n. ${data.numFattura}
-
-Con la presente intendo formulare formale reclamo in merito alla fattura n. ${data.numFattura}, emessa in data ${data.dataFattura}, relativa alla fornitura di ${data.fornitura} presso l’indirizzo ${data.indirizzoFornitura}, codice cliente ${data.numCliente}, per un importo complessivo pari a ${data.importo} €.
-
-L’importo indicato risulta significativamente superiore rispetto ai consumi abituali registrati per la medesima utenza.
-
-Chiedo verifica puntuale dei consumi e rettifica dell’importo qualora si riscontrassero incongruenze.
-
-Distinti saluti.
-
-Data: ${dataOggi}
-
-Firma
-________________________
-${data.nome}
-      `.trim();
+      testo = composeLetter(
+        `Reclamo formale relativo alla fattura n. ${data.numFattura}`,
+        `Con la presente formulo reclamo in merito alla fattura indicata, dell’importo di ${data.importo} €, in quanto significativamente superiore rispetto ai consumi medi storici della medesima utenza.`,
+        'Chiedo la verifica tecnica e amministrativa degli importi fatturati e, in caso di incongruenze, la rettifica con eventuale ricalcolo e storno.',
+        'Il presente reclamo è presentato ai sensi della regolazione ARERA sulla qualità commerciale della vendita (TIQV), con richiesta di risposta entro i termini applicabili.'
+      );
     }
   }
 
   else if(type === "rateizzazione") {
-    testo = `
-${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('PEC', data.pec)}${L('Telefono', data.telefono)}
-
-Spett.le
-${data.fornitore}
-Ufficio Clienti
-${PEC_DEST}
-Oggetto: Richiesta di rateizzazione fattura n. ${data.numFattura}
-
-Con riferimento alla fattura n. ${data.numFattura}, emessa in data ${data.dataFattura}, dell’importo complessivo di ${data.importo} €, chiedo cortesemente la possibilità di concordare un piano di rateizzazione del pagamento.
-
-La presente richiesta è motivata da temporanee difficoltà economiche che non consentono il saldo in un’unica soluzione.
-
-Resto disponibile a concordare modalità e tempistiche di pagamento compatibili con le Vostre procedure.
-
-In attesa di cortese riscontro, porgo distinti saluti.
-
-Data: ${dataOggi}
-
-Firma
-________________________
-${data.nome}
-    `.trim();
+    testo = composeLetter(
+      `Richiesta di rateizzazione fattura n. ${data.numFattura}`,
+      `Con riferimento alla fattura indicata, dell’importo complessivo di ${data.importo} €, chiedo la possibilità di definire un piano di rateizzazione del pagamento.`,
+      'La richiesta è motivata da temporanea difficoltà economica; resto disponibile a concordare un piano sostenibile e conforme alle vostre procedure.',
+      'Si chiede di valutare la presente istanza secondo quanto previsto dalle condizioni contrattuali e dalla disciplina ARERA applicabile in tema di rateizzazione dei corrispettivi di fornitura.'
+    );
   }
 
   else if(type === "contatore") {
-    testo = `
-${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('PEC', data.pec)}${L('Telefono', data.telefono)}
-
-Spett.le
-${data.fornitore}
-Ufficio Reclami
-${PEC_DEST}
-Oggetto: Richiesta di verifica tecnica del contatore
-
-Con la presente segnalo consumi anomali relativi alla fornitura di ${data.fornitura} presso l’indirizzo ${data.indirizzoFornitura}, codice cliente ${data.numCliente}.
-
-Alla luce delle recenti fatturazioni, ritengo opportuno richiedere una verifica tecnica del contatore al fine di accertarne il corretto funzionamento.
-
-Resto in attesa di indicazioni circa le modalità di verifica e gli eventuali costi previsti.
-
-Distinti saluti.
-
-Data: ${dataOggi}
-
-Firma
-________________________
-${data.nome}
-    `.trim();
+    testo = composeLetter(
+      'Richiesta di verifica tecnica del misuratore',
+      `Con la presente segnalo consumi anomali relativi alla fornitura di ${data.fornitura} e richiedo una verifica del corretto funzionamento del misuratore installato presso ${data.indirizzoFornitura}.`,
+      'Chiedo di ricevere indicazioni sulle modalità operative, sui tempi di intervento e sugli eventuali oneri previsti in caso di verifica.',
+      'La richiesta è formulata in conformità alla regolazione ARERA in materia di misura e qualità del servizio, con richiesta di riscontro scritto.'
+    );
   }
 
   else if(type === "voltura") {
-    testo = `
-${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('PEC', data.pec)}${L('Telefono', data.telefono)}
-
-Spett.le
-${data.fornitore}
-Ufficio Clienti
-${PEC_DEST}
-Oggetto: Richiesta di voltura del contratto di fornitura
-
-Con la presente chiedo la voltura del contratto relativo alla fornitura di ${data.fornitura} presso l’immobile sito in ${data.indirizzoFornitura}, codice cliente ${data.numCliente}.
-
-Resto a disposizione per fornire eventuale documentazione necessaria e per completare la procedura secondo le Vostre indicazioni.
-
-In attesa di cortese riscontro, porgo distinti saluti.
-
-Data: ${dataOggi}
-
-Firma
-________________________
-${data.nome}
-    `.trim();
+    testo = composeLetter(
+      'Richiesta di voltura del contratto di fornitura',
+      `Con la presente chiedo la voltura del contratto relativo alla fornitura di ${data.fornitura} presso l’immobile sito in ${data.indirizzoFornitura}.`,
+      'Resto a disposizione per trasmettere la documentazione necessaria e completare la procedura nei tempi previsti.',
+      'Si richiede gestione della pratica secondo la disciplina ARERA vigente e le condizioni economiche/contrattuali applicabili.'
+    );
   }
 
-  document.getElementById('doc').textContent = testo;
+  const docEl = document.getElementById('doc');
+  docEl.textContent = testo;
+  ['copy','cut','dragstart','selectstart','contextmenu'].forEach((evt) => {
+    docEl.addEventListener(evt, (e) => e.preventDefault());
+  });
 
   // Salva il documento per poterlo scaricare in PDF nella pagina successiva (success.html)
   try {
@@ -320,7 +243,7 @@ ${data.nome}
     };
     localStorage.setItem('reclamoenergia_last_doc', JSON.stringify(payload));
   } catch (e) {
-    // Se localStorage non è disponibile, pazienza: l'utente potrà comunque copiare il testo.
+    // Se localStorage non è disponibile, pazienza: l'utente potrà comunque visualizzare il testo in anteprima.
   }
 </script>
 </body>

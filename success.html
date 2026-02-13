@@ -82,78 +82,104 @@ function downloadPdf(){
   const filename = (payload.filename || 'ReclamoEnergia.pdf').replace(/[^\w\-\.]+/g, '_');
 
   const { jsPDF } = window.jspdf;
-const doc = new jsPDF({ unit: "pt", format: "a4" });
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
 
-const pageWidth = doc.internal.pageSize.getWidth();
-const pageHeight = doc.internal.pageSize.getHeight();
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
 
-const margin = 70;
-const maxWidth = pageWidth - margin * 2;
-const lineGap = 19;
+  const margin = 56;
+  const maxWidth = pageWidth - margin * 2;
+  const lineGap = 17;
 
-doc.setFont("times", "normal");
-doc.setFontSize(12);
+  const ensurePageSpace = (needed = lineGap) => {
+    if (y + needed > pageHeight - margin) {
+      doc.addPage();
+      y = margin;
+      drawPageFrame();
+    }
+  };
 
-let y = margin;
+  const drawPageFrame = () => {
+    doc.setDrawColor(220, 226, 235);
+    doc.setLineWidth(1);
+    doc.rect(margin - 16, margin - 18, pageWidth - ((margin - 16) * 2), pageHeight - ((margin - 18) * 2));
+  };
 
-const lines = text.split("\n");
+  drawPageFrame();
 
-// --- MITTENTE (fino a Spett.le) ---
-let i = 0;
-while (i < lines.length && !lines[i].trim().startsWith("Spett.le")) {
-  const row = lines[i].trim();
-  if (row !== "") {
-    doc.text(row, margin, y);
-    y += lineGap;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(16);
+  doc.setTextColor(34, 57, 94);
+  doc.text("Comunicazione formale al fornitore", margin, margin + 8);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  doc.setTextColor(95, 105, 120);
+  doc.text("Documento generato automaticamente da ReclamoEnergia", margin, margin + 26);
+
+  doc.setDrawColor(222, 228, 236);
+  doc.line(margin, margin + 36, pageWidth - margin, margin + 36);
+
+  doc.setFont("times", "normal");
+  doc.setFontSize(12);
+  doc.setTextColor(28, 31, 37);
+
+  let y = margin + 58;
+  const lines = text.split("\n");
+
+  let i = 0;
+  while (i < lines.length && !lines[i].trim().startsWith("Spett.le")) {
+    const row = lines[i].trim();
+    if (row) {
+      ensurePageSpace();
+      doc.text(row, margin, y);
+      y += lineGap;
+    }
+    i++;
   }
-  i++;
-}
 
-// --- DESTINATARIO (a destra) ---
-let destStartY = margin;
-let destLines = [];
+  const destStartY = margin + 58;
+  const destLines = [];
+  while (i < lines.length && !lines[i].trim().startsWith("Oggetto:")) {
+    const row = lines[i].trim();
+    if (row) destLines.push(row);
+    i++;
+  }
 
-while (i < lines.length && !lines[i].trim().startsWith("Oggetto:")) {
-  if (lines[i].trim() !== "") destLines.push(lines[i].trim());
-  i++;
-}
+  doc.setFont("times", "bold");
+  destLines.forEach((line, idx) => {
+    doc.text(line, pageWidth - margin, destStartY + idx * lineGap, { align: "right" });
+  });
 
-for (let d = 0; d < destLines.length; d++) {
-  doc.text(destLines[d], pageWidth - margin, destStartY + d * lineGap, { align: "right" });
-}
+  y = Math.max(y, destStartY + destLines.length * lineGap) + 24;
 
-// Allineiamo y sotto il blocco più basso
-y = Math.max(y, destStartY + destLines.length * lineGap) + 55;
-
-// --- OGGETTO ---
-if (i < lines.length && lines[i].trim().startsWith("Oggetto:")) {
+  if (i < lines.length && lines[i].trim().startsWith("Oggetto:")) {
+    ensurePageSpace(22);
     doc.setFont("times", "bold");
     doc.setFontSize(13);
     doc.text(lines[i].trim(), margin, y);
-    doc.setFontSize(12);
+    y += 18;
+    doc.setDrawColor(210, 216, 225);
+    doc.line(margin, y, pageWidth - margin, y);
+    y += 18;
     doc.setFont("times", "normal");
-    y += 34;
-
-  i++;
-}
-
-// --- CORPO LETTERA ---
-for (; i < lines.length; i++) {
-  const row = lines[i].trimEnd();
-
-  if (row === "") {
-    y += 14;
-    continue;
+    doc.setFontSize(12);
+    i++;
   }
 
-  const wrapped = doc.splitTextToSize(row, maxWidth);
-  doc.text(wrapped, margin, y);
-  y += wrapped.length * lineGap;
-}
+  for (; i < lines.length; i++) {
+    const row = lines[i].trimEnd();
+    if (!row) {
+      y += 10;
+      continue;
+    }
+    const wrapped = doc.splitTextToSize(row, maxWidth);
+    ensurePageSpace(wrapped.length * lineGap);
+    doc.text(wrapped, margin, y);
+    y += wrapped.length * lineGap;
+  }
 
-
-
-doc.save(filename);
+  doc.save(filename);
 
 
 
