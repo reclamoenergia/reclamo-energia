@@ -15,9 +15,7 @@
       background:#fff;border:1px solid #e5e7eb;border-radius:14px;
       padding:18px; line-height:1.55; font-size:15px; white-space:pre-wrap;
     }
-    .watermark{
-      position:relative;
-    }
+    .watermark{position:relative;}
     .watermark:before{
       content:"ANTEPRIMA";
       position:absolute; top:45%; left:50%;
@@ -34,12 +32,8 @@
       border-radius:14px;
       padding:16px;
     }
-    .priceRow{
-      display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
-    }
-    .price{
-      font-size:28px; font-weight:900; color:var(--green);
-    }
+    .priceRow{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+    .price{font-size:28px; font-weight:900; color:var(--green);}
     .btn{
       padding:12px 16px;border-radius:10px;border:1px solid var(--green);
       background:var(--green);color:#fff;font-weight:900;font-size:16px;text-decoration:none;cursor:pointer;
@@ -68,27 +62,27 @@
           <div style="text-align:right;">
             <div class="price">7€</div>
             <div style="font-size:13px;color:#6b7280;">Prezzo lancio</div>
-            <a class="btn" href="https://buy.stripe.com/fZu3co9Kscsh0PBe126wE00" target="_blank">  Scarica ora </a>
-
+            <a class="btn" href="https://buy.stripe.com/fZu3co9Kscsh0PBe126wE00" target="_blank" rel="noopener">Scarica ora</a>
           </div>
         </div>
+
         <ul>
-            <li>Documento formale redatto in modo professionale</li>
-            <li>Utilizzabile come prova dell’avvenuta comunicazione </li>
-            <li>PDF pronto per email o PEC</li>
-            <li>Oggetto email già pronto per l’invio</li>
-            <li>Mini guida su cosa fare se non ricevi risposta</li>
-            <li>Nessun abbonamento o costi ricorrenti</li>
+          <li>Documento formale redatto in modo professionale</li>
+          <li>Utilizzabile come prova dell’avvenuta comunicazione</li>
+          <li>PDF pronto per email o PEC</li>
+          <li>Oggetto email già pronto per l’invio</li>
+          <li>Mini guida su cosa fare se non ricevi risposta</li>
+          <li>Nessun abbonamento o costi ricorrenti</li>
         </ul>
 
         <div class="small">
-                  Il servizio fornisce modelli standard di comunicazione e non costituisce consulenza legale.
-                  <br><br>
-                  <a href="chi-siamo.html" style="color:#2F5FA7;font-weight:700;text-decoration:none;">Chi siamo</a>
-                  &nbsp;|&nbsp;
-                  <a href="privacy.html" style="color:#2F5FA7;font-weight:700;text-decoration:none;">Privacy</a>
+          Il servizio fornisce modelli standard di comunicazione e non costituisce consulenza legale.
+          <br><br>
+          <a href="chi-siamo.html" style="color:#2F5FA7;font-weight:700;text-decoration:none;">Chi siamo</a>
+          &nbsp;|&nbsp;
+          <a href="privacy.html" style="color:#2F5FA7;font-weight:700;text-decoration:none;">Privacy</a>
         </div>
-
+      </div>
 
       <a class="back" href="azione.html">← Indietro</a>
     </div>
@@ -99,14 +93,15 @@
   const type = p.get('type') || 'reclamo';
   const reason = p.get('reason') || 'importo';
 
-
   // Dati inseriti
   const data = {
     fornitura: p.get('fornitura') || 'Luce',
     fornitore: p.get('fornitore') || 'Fornitore',
+    pecFornitore: p.get('pecFornitore') || '',
     altroCitta: p.get('altroCitta') || '',
     nome: p.get('nome') || '',
     email: p.get('email') || '',
+    pec: p.get('pec') || '',
     indirizzo: p.get('indirizzo') || '',
     telefono: p.get('telefono') || '',
     numCliente: p.get('numCliente') || '',
@@ -116,40 +111,31 @@
     indirizzoFornitura: p.get('indirizzoFornitura') || '',
     descrizione: p.get('descrizione') || ''
   };
-  
+
   const L = (label, value) => value ? `${label}: ${value}\n` : '';
   const T = (value) => value ? `${value}\n` : '';
 
+  // Riga PEC fornitore (solo se presente)
+  const PEC_DEST = data.pecFornitore ? `Inviata a mezzo PEC all’indirizzo: ${data.pecFornitore}\n` : '';
 
-  // Template 1 (reclamo importo anomalo) come base MVP
-  // 
   const oggi = new Date();
   const dd = String(oggi.getDate()).padStart(2,'0');
   const mm = String(oggi.getMonth()+1).padStart(2,'0');
   const yyyy = oggi.getFullYear();
   const dataOggi = `${dd}/${mm}/${yyyy}`;
 
-  const cittaAltro = data.altroCitta ? `\n${data.altroCitta}` : '';
+  let testo = "";
 
- let testo = "";
+  if(type === "reclamo") {
 
-if(type === "reclamo") {
-
-  if(reason === "stimata") {
-
-    testo = `
-          ${T(data.nome)}
-          ${T(data.indirizzo)}
-          ${L('Email', data.email)}
-          ${L('PEC', data.pec)}
-          ${L('Telefono', data.telefono)}
-
-
+    if(reason === "stimata") {
+      testo = `
+${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('PEC', data.pec)}${L('Telefono', data.telefono)}
 
 Spett.le
 ${data.fornitore}
 Ufficio Reclami
-
+${PEC_DEST}
 Oggetto: Reclamo per lettura stimata non corretta – fattura n. ${data.numFattura}
 
 Con riferimento alla fattura n. ${data.numFattura}, emessa in data ${data.dataFattura}, relativa alla fornitura di ${data.fornitura} presso ${data.indirizzoFornitura}, segnalo che gli importi risultano calcolati sulla base di letture stimate non corrispondenti ai consumi effettivi.
@@ -163,20 +149,17 @@ Data: ${dataOggi}
 Firma
 ________________________
 ${data.nome}
-`.trim();
+      `.trim();
+    }
 
-  }
-
-  else if(reason === "doppia") {
-
-    testo = `
-${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('Telefono', data.telefono)}
-
+    else if(reason === "doppia") {
+      testo = `
+${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('PEC', data.pec)}${L('Telefono', data.telefono)}
 
 Spett.le
 ${data.fornitore}
 Ufficio Reclami
-
+${PEC_DEST}
 Oggetto: Reclamo per doppia fatturazione – fattura n. ${data.numFattura}
 
 Con la presente segnalo la presenza di una possibile doppia fatturazione relativa alla fornitura presso ${data.indirizzoFornitura}, codice cliente ${data.numCliente}.
@@ -192,20 +175,17 @@ Data: ${dataOggi}
 Firma
 ________________________
 ${data.nome}
-`.trim();
+      `.trim();
+    }
 
-  }
-
-  else if(reason === "voci") {
-
-    testo = `
-${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('Telefono', data.telefono)}
-
+    else if(reason === "voci") {
+      testo = `
+${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('PEC', data.pec)}${L('Telefono', data.telefono)}
 
 Spett.le
 ${data.fornitore}
 Ufficio Reclami
-
+${PEC_DEST}
 Oggetto: Reclamo per addebito di voci non previste – fattura n. ${data.numFattura}
 
 Con riferimento alla fattura n. ${data.numFattura}, dell’importo di ${data.importo} €, segnalo la presenza di voci di spesa non previste o non espressamente autorizzate.
@@ -219,22 +199,18 @@ Data: ${dataOggi}
 Firma
 ________________________
 ${data.nome}
-`.trim();
+      `.trim();
+    }
 
-  }
-
-  else {
-
-    // IMPORTO ANOMALO (default)
-
-    testo = `
-${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('Telefono', data.telefono)}
-
+    else {
+      // IMPORTO ANOMALO (default)
+      testo = `
+${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('PEC', data.pec)}${L('Telefono', data.telefono)}
 
 Spett.le
 ${data.fornitore}
 Ufficio Reclami
-
+${PEC_DEST}
 Oggetto: Reclamo formale relativo alla fattura n. ${data.numFattura}
 
 Con la presente intendo formulare formale reclamo in merito alla fattura n. ${data.numFattura}, emessa in data ${data.dataFattura}, relativa alla fornitura di ${data.fornitura} presso l’indirizzo ${data.indirizzoFornitura}, codice cliente ${data.numCliente}, per un importo complessivo pari a ${data.importo} €.
@@ -250,24 +226,18 @@ Data: ${dataOggi}
 Firma
 ________________________
 ${data.nome}
-`.trim();
-
+      `.trim();
+    }
   }
 
-}
-
-
-
-else if(type === "rateizzazione") {
-
-  testo = `
-${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('Telefono', data.telefono)}
-
+  else if(type === "rateizzazione") {
+    testo = `
+${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('PEC', data.pec)}${L('Telefono', data.telefono)}
 
 Spett.le
 ${data.fornitore}
 Ufficio Clienti
-
+${PEC_DEST}
 Oggetto: Richiesta di rateizzazione fattura n. ${data.numFattura}
 
 Con riferimento alla fattura n. ${data.numFattura}, emessa in data ${data.dataFattura}, dell’importo complessivo di ${data.importo} €, chiedo cortesemente la possibilità di concordare un piano di rateizzazione del pagamento.
@@ -283,21 +253,17 @@ Data: ${dataOggi}
 Firma
 ________________________
 ${data.nome}
-`.trim();
+    `.trim();
+  }
 
-}
-
-
-else if(type === "contatore") {
-
-  testo = `
-${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('Telefono', data.telefono)}
-
+  else if(type === "contatore") {
+    testo = `
+${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('PEC', data.pec)}${L('Telefono', data.telefono)}
 
 Spett.le
 ${data.fornitore}
 Ufficio Reclami
-
+${PEC_DEST}
 Oggetto: Richiesta di verifica tecnica del contatore
 
 Con la presente segnalo consumi anomali relativi alla fornitura di ${data.fornitura} presso l’indirizzo ${data.indirizzoFornitura}, codice cliente ${data.numCliente}.
@@ -313,21 +279,17 @@ Data: ${dataOggi}
 Firma
 ________________________
 ${data.nome}
-`.trim();
+    `.trim();
+  }
 
-}
-
-
-else if(type === "voltura") {
-
-  testo = `
-${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('Telefono', data.telefono)}
-
+  else if(type === "voltura") {
+    testo = `
+${T(data.nome)}${T(data.indirizzo)}${L('Email', data.email)}${L('PEC', data.pec)}${L('Telefono', data.telefono)}
 
 Spett.le
 ${data.fornitore}
 Ufficio Clienti
-
+${PEC_DEST}
 Oggetto: Richiesta di voltura del contratto di fornitura
 
 Con la presente chiedo la voltura del contratto relativo alla fornitura di ${data.fornitura} presso l’immobile sito in ${data.indirizzoFornitura}, codice cliente ${data.numCliente}.
@@ -341,29 +303,24 @@ Data: ${dataOggi}
 Firma
 ________________________
 ${data.nome}
-`.trim();
-
-}
-
-
+    `.trim();
+  }
 
   document.getElementById('doc').textContent = testo;
+
   // Salva il documento per poterlo scaricare in PDF nella pagina successiva (success.html)
-    try {
-      const payload = {
-        text: testo,
-        createdAt: Date.now(),
-        type: type,
-        reason: (typeof reason !== 'undefined' ? reason : ''),
-        filename: `ReclamoEnergia_${type}_${dataOggi.replaceAll('/','-')}.pdf`
-      };
-      localStorage.setItem('reclamoenergia_last_doc', JSON.stringify(payload));
-    } catch (e) {
-      // Se localStorage non è disponibile, pazienza: l'utente potrà comunque copiare il testo.
-    }
-
-
-  
+  try {
+    const payload = {
+      text: testo,
+      createdAt: Date.now(),
+      type: type,
+      reason: reason || '',
+      filename: `ReclamoEnergia_${type}_${dataOggi.replaceAll('/','-')}.pdf`
+    };
+    localStorage.setItem('reclamoenergia_last_doc', JSON.stringify(payload));
+  } catch (e) {
+    // Se localStorage non è disponibile, pazienza: l'utente potrà comunque copiare il testo.
+  }
 </script>
 </body>
 </html>
