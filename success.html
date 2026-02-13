@@ -27,6 +27,10 @@
     .btn:hover{opacity:.93}
     .box{margin-top:16px;border:1px solid #e5e7eb;background:#f9fafb;border-radius:14px;padding:14px;text-align:left;}
     .box b{color:#111827}
+    .pec-box{margin-top:18px;padding:14px;border:1px solid #d1d5db;border-radius:12px;background:#f8fafc;text-align:left}
+    .pec-box h2{margin:0 0 8px;font-size:18px;color:#1f2937}
+    .pec-box p{margin:0 0 10px;color:#4b5563}
+    .pec-text{width:100%;min-height:220px;border:1px solid #cbd5e1;border-radius:8px;padding:10px;font-family:inherit;font-size:14px;line-height:1.45;box-sizing:border-box;background:#fff}
     .small{margin-top:10px;font-size:12px;color:var(--muted);line-height:1.45}
   </style>
 </head>
@@ -43,7 +47,7 @@
           Il tuo documento è stato generato correttamente. Puoi scaricarlo in formato PDF e inviarlo al fornitore.
         </p>
 
-   <button
+<button
   class="btn"
   type="button"
   style="background:#2E8B57;border-color:#2E8B57;cursor:pointer;position:relative;z-index:9999;"
@@ -52,24 +56,53 @@
 </button>
 <div class="small" id="pdfMsg" style="margin-top:10px;"></div>
 
+<div class="pec-box">
+  <h2>Testo copia e incolla per la PEC</h2>
+  <p>Copialo qui sotto e incollalo direttamente nel corpo della tua PEC.</p>
+  <textarea id="pecText" class="pec-text" readonly>Caricamento del testo in corso...</textarea>
+  <button class="btn" type="button" style="margin-top:10px;" onclick="copyPecText()">Copia testo PEC</button>
+  <div class="small" id="copyMsg"></div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
 <script>
+function getStoredPayload(){
+  try {
+    const raw = localStorage.getItem('reclamoenergia_last_doc');
+    return raw ? JSON.parse(raw) : null;
+  } catch(e) {
+    return null;
+  }
+}
+
+function loadPecText(){
+  const payload = getStoredPayload();
+  const pecText = document.getElementById('pecText');
+  if(!payload || !payload.text){
+    pecText.value = 'Non trovo il testo del documento in questo browser. Torna alla pagina del documento e rigenera il testo.';
+    return;
+  }
+  pecText.value = payload.text.trim();
+}
+
+function copyPecText(){
+  const pecText = document.getElementById('pecText');
+  const copyMsg = document.getElementById('copyMsg');
+  pecText.select();
+  pecText.setSelectionRange(0, 99999);
+  document.execCommand('copy');
+  copyMsg.textContent = 'Testo PEC copiato ✅';
+}
+
 function downloadPdf(){
   const msg = document.getElementById('pdfMsg');
   msg.textContent = '';
 
-  let raw = null;
-  try { raw = localStorage.getItem('reclamoenergia_last_doc'); } catch(e){}
+  const payload = getStoredPayload();
 
-  if(!raw){
+  if(!payload){
     msg.textContent = "Non trovo il documento in questo browser. Torna alla pagina del documento e riprova.";
-    return;
-  }
-
-  let payload;
-  try { payload = JSON.parse(raw); } catch(e){
-    msg.textContent = "Documento non valido. Torna alla pagina del documento e riprova.";
     return;
   }
 
@@ -95,36 +128,14 @@ function downloadPdf(){
     if (y + needed > pageHeight - margin) {
       doc.addPage();
       y = margin;
-      drawPageFrame();
     }
   };
-
-  const drawPageFrame = () => {
-    doc.setDrawColor(220, 226, 235);
-    doc.setLineWidth(1);
-    doc.rect(margin - 16, margin - 18, pageWidth - ((margin - 16) * 2), pageHeight - ((margin - 18) * 2));
-  };
-
-  drawPageFrame();
-
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(16);
-  doc.setTextColor(34, 57, 94);
-  doc.text("Comunicazione formale al fornitore", margin, margin + 8);
-
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
-  doc.setTextColor(95, 105, 120);
-  doc.text("Documento generato automaticamente da ReclamoEnergia", margin, margin + 26);
-
-  doc.setDrawColor(222, 228, 236);
-  doc.line(margin, margin + 36, pageWidth - margin, margin + 36);
 
   doc.setFont("times", "normal");
   doc.setFontSize(12);
   doc.setTextColor(28, 31, 37);
 
-  let y = margin + 58;
+  let y = margin;
   const lines = text.split("\n");
 
   let i = 0;
@@ -189,6 +200,8 @@ function downloadPdf(){
 
   msg.textContent = "PDF scaricato ✅";
 }
+
+loadPecText();
 </script>
 
   
