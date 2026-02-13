@@ -5,50 +5,61 @@
   <title>Scegli richiesta - ReclamoEnergia</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    :root{--blue:#2F5FA7;--green:#2E8B57;--bg:#f4f6f8;--muted:#6b7280;}
+    :root{--blue:#2F5FA7;--green:#2E8B57;--bg:#f4f6f8;--muted:#6b7280;--ink:#0f172a;}
     body{font-family:Arial,sans-serif;margin:0;background:var(--bg);color:#111827;}
-    .wrap{max-width:920px;margin:0 auto;padding:28px 16px 60px;}
-    .card{background:#fff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:22px;}
-    h1{margin:0 0 8px;color:var(--blue);font-size:26px}
+    .wrap{max-width:940px;margin:0 auto;padding:28px 16px 60px;}
+    .card{background:#fff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:24px;}
+    h1{margin:0 0 8px;color:var(--blue);font-size:28px;line-height:1.2}
     p{margin:0 0 16px;color:var(--muted);line-height:1.45}
+    .service-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:14px 16px;color:#1e3a8a;line-height:1.45;margin-bottom:14px;font-size:15px}
+    .service-box b{display:block;color:#1e40af;margin-bottom:4px}
     .grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}
     @media(min-width:760px){.grid{grid-template-columns:1fr 1fr}}
-    a.tile{display:block;text-decoration:none;color:#111827;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:16px}
-    a.tile:hover{background:#f9fafb}
+    .tile{display:block;text-decoration:none;color:#111827;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:16px;transition:all .15s ease}
+    .tile:hover{background:#f9fafb;border-color:#cbd5e1;transform:translateY(-1px)}
     .tile h3{margin:0 0 6px;color:var(--blue);font-size:18px}
     .tile .small{margin:0;color:var(--muted);font-size:14px}
-    .back{display:inline-block;margin-top:14px;color:var(--blue);text-decoration:none;font-weight:700}
+    .btn{display:inline-block;padding:9px 12px;border-radius:10px;border:1px solid #cbd5e1;text-decoration:none;color:var(--ink);font-size:14px;font-weight:700;background:#f8fafc}
+    .btn:hover{background:#f1f5f9}
+    .chip{display:inline-block;background:#ecfeff;border:1px solid #bae6fd;color:#0c4a6e;border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700;margin-bottom:8px}
+    .back{display:inline-block;margin-top:16px;color:var(--blue);text-decoration:none;font-weight:700}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card">
-      <h1>Seleziona il documento</h1>
-      <p>Scegli l’opzione che ti serve. Nel prossimo passo inserirai pochi dati e vedrai il testo completo prima di scaricare il PDF.</p>
+      <h1>Scegli il documento da generare</h1>
+      <p>In questa pagina selezioni il tipo di comunicazione. Nel passaggio successivo inserisci i dati e ottieni il testo formale pronto da inviare al fornitore.</p>
+
+      <div class="service-box">
+        <b>Servizio erogato da ReclamoEnergia</b>
+        Generazione di documenti formali personalizzati (PDF + testo email/PEC) per reclami e richieste luce/gas. Non inviamo noi la pratica: il documento resta sotto il tuo controllo.
+      </div>
 
       <div class="grid">
-        <div class="tile" style="border:1px solid #e5e7eb;border-radius:14px;padding:16px;background:#fff;">
-  <h3 style="margin:0 0 6px;color:#2F5FA7;font-size:18px">Reclamo bolletta</h3>
-  <p class="small">Seleziona il motivo e genera il reclamo corretto.</p>
-  <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;">
-    <a class="btn" href="form.html?type=reclamo&reason=importo">Importo anomalo</a>
-    <a class="btn" href="form.html?type=reclamo&reason=stimata">Lettura stimata errata</a>
-    <a class="btn" href="form.html?type=reclamo&reason=doppia">Doppia fatturazione</a>
-    <a class="btn" href="form.html?type=reclamo&reason=voci">Voci non previste</a>
-  </div>
-</div>
+        <div class="tile" style="border:1px solid #cbd5e1;">
+          <span class="chip">Servizio più richiesto</span>
+          <h3>Reclamo bolletta</h3>
+          <p class="small">Seleziona il motivo e genera un reclamo specifico, con richiesta chiara e completa.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;">
+            <a class="btn" href="form.html?type=reclamo&reason=importo">Importo anomalo</a>
+            <a class="btn" href="form.html?type=reclamo&reason=stimata">Lettura stimata errata</a>
+            <a class="btn" href="form.html?type=reclamo&reason=doppia">Doppia fatturazione</a>
+            <a class="btn" href="form.html?type=reclamo&reason=voci">Voci non previste</a>
+          </div>
+        </div>
 
         <a class="tile" href="form.html?type=rateizzazione">
           <h3>Richiesta rateizzazione</h3>
-          <p class="small">Chiedi un piano di pagamento in modo formale.</p>
+          <p class="small">Genera una richiesta formale per ottenere un piano di pagamento.</p>
         </a>
         <a class="tile" href="form.html?type=contatore">
           <h3>Verifica contatore</h3>
-          <p class="small">Richiedi controllo se i consumi non ti tornano.</p>
+          <p class="small">Prepara la richiesta di controllo tecnico quando i consumi non tornano.</p>
         </a>
         <a class="tile" href="form.html?type=voltura">
           <h3>Voltura</h3>
-          <p class="small">Cambio intestazione o aggiornamento dati contratto.</p>
+          <p class="small">Crea la richiesta per cambio intestazione o aggiornamento dati contrattuali.</p>
         </a>
       </div>
 
