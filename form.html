@@ -32,6 +32,16 @@ background:#f9fafb;font-weight:800;font-size:16px;cursor:pointer;
 .back{display:inline-block;margin-top:14px;color:var(--blue);text-decoration:none;font-weight:700}
 .hint{font-size:12px;color:var(--muted);margin-top:6px}
 #altroBox{display:none;margin-top:12px}
+.notice{
+background:#eff6ff;
+border:1px solid #bfdbfe;
+border-radius:12px;
+padding:14px;
+margin:0 0 16px;
+color:#1e3a8a;
+line-height:1.5;
+}
+.notice strong{display:block;margin-bottom:4px}
 </style>
 </head>
 <body>
@@ -41,6 +51,13 @@ background:#f9fafb;font-weight:800;font-size:16px;cursor:pointer;
 
 <h1 id="title">Compila i dati</h1>
 <p>Inserisci pochi dati. Nel prossimo passo vedrai il documento completo prima di scaricare il PDF.</p>
+
+<div class="notice">
+<strong>ReclamoEnergia è un servizio digitale privato</strong>
+che ti aiuta a redigere correttamente un reclamo formale verso il tuo fornitore di luce o gas.<br><br>
+Non siamo un ente pubblico e non riceviamo i reclami per conto dei fornitori.<br><br>
+Il documento viene generato automaticamente sulla base dei dati che inserisci e rimane sotto il tuo controllo.
+</div>
 
 <div class="progress">
 <div class="bar on" id="p1"></div>
@@ -103,6 +120,11 @@ background:#f9fafb;font-weight:800;font-size:16px;cursor:pointer;
 
 <!-- STEP 2 -->
 <div id="step2" class="hidden">
+
+<div class="notice">
+I dati vengono utilizzati solo per generare il documento.<br>
+Non vengono archiviati né condivisi.
+</div>
 
 <div class="row">
 <div>
