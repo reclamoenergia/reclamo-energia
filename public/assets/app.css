@@ -1,0 +1,36 @@
+:root {
+  --blue: #2f5fa7;
+  --green: #2e8b57;
+  --bg: #f4f6f8;
+  --text: #111827;
+  --muted: #6b7280;
+  --card: #fff;
+  --error: #b91c1c;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, Arial, sans-serif; background: var(--bg); color: var(--text); }
+.wrap { max-width: 920px; margin: 0 auto; padding: 20px 14px 56px; }
+.card { background: var(--card); border-radius: 14px; box-shadow: 0 6px 18px rgba(0,0,0,.08); padding: 20px; margin-top: 12px; }
+h1, h2, h3 { margin-top: 0; }
+.btn { border: 1px solid #d1d5db; background: #f9fafb; color: #111827; border-radius: 10px; padding: 12px 14px; font-weight: 700; text-decoration: none; display: inline-block; cursor: pointer; }
+.btn.primary { background: var(--green); border-color: var(--green); color: #fff; }
+.btn.link { border: none; background: transparent; color: var(--blue); padding: 0; }
+.grid { display: grid; gap: 12px; }
+@media (min-width: 760px) { .grid.two { grid-template-columns: 1fr 1fr; } }
+label { font-size: 14px; font-weight: 700; display: block; margin-bottom: 6px; }
+input, select, textarea { width: 100%; border: 1px solid #d1d5db; border-radius: 10px; padding: 11px; font-size: 16px; }
+textarea { min-height: 90px; }
+.error { margin-top: 4px; font-size: 12px; color: var(--error); min-height: 16px; }
+.input-error { border-color: var(--error); }
+.progress { display: flex; gap: 7px; margin: 10px 0 16px; }
+.progress span { flex: 1; height: 8px; border-radius: 999px; background: #e5e7eb; }
+.progress span.active { background: #bfdbfe; }
+.trust { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 12px; color: #1e3a8a; }
+.muted { color: var(--muted); }
+.footer { margin-top: 24px; font-size: 12px; color: var(--muted); }
+.step { display: none; }
+.step.active { display: block; }
+.summary { white-space: pre-wrap; border: 1px solid #e5e7eb; border-radius: 12px; background: #f9fafb; padding: 12px; }
+.header { background: #fff; border-bottom: 1px solid #e5e7eb; }
+.header .wrap { padding-top: 12px; padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+.inline { display: flex; gap: 8px; flex-wrap: wrap; }
