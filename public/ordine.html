@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ordine e download documento | Reclamo Energia</title>
+  <meta name="description" content="Pagina ordine: stato pagamento, download PDF e testo PEC copiabile." />
+  <meta property="og:title" content="Ordine Reclamo Energia" />
+  <meta property="og:description" content="Recupera il tuo ordine e scarica il documento finale." />
+  <link rel="stylesheet" href="/assets/app.css" />
+  <script src="/js/consent.js" defer></script>
+  <script src="/js/ordine.js" defer></script>
+</head>
+<body>
+<main class="wrap">
+  <section class="card">
+    <h1>La tua area ordine</h1>
+    <p class="muted" id="orderState">Caricamento ordine...</p>
+
+    <div id="paidBox" style="display:none;">
+      <p><strong>Pagamento confermato ✅</strong></p>
+      <p><a id="pdfLink" class="btn primary" href="#">Scarica PDF</a></p>
+      <label for="pecText">Testo pronto per PEC</label>
+      <textarea id="pecText" readonly></textarea>
+      <button class="btn" id="copyPec">Copia testo PEC</button>
+      <p class="muted" id="copyFeedback"></p>
+    </div>
+
+    <div id="pendingBox" style="display:none;">
+      <p>Ordine creato ma non ancora pagato.</p>
+      <button class="btn primary" id="checkoutAgain">Completa pagamento</button>
+    </div>
+
+    <div class="card" style="margin-top:18px;">
+      <h2>Recupero documento</h2>
+      <p class="muted">Inserisci link di recupero o ID ordine.</p>
+      <div class="inline">
+        <input id="recoverToken" placeholder="token recupero" />
+        <button class="btn" id="recoverBtn">Recupera</button>
+      </div>
+      <p class="muted" id="recoverFeedback"></p>
+    </div>
+  </section>
+</main>
+</body>
+</html>
