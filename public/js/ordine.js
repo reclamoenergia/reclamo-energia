@@ -5,11 +5,11 @@ async function fetchOrderByQuery() {
 
   if (token) {
     const res = await fetch(`/api/orders/recover/${token}`);
-    if (!res.ok) throw new Error('Token non valido');
+    if (!res.ok) throw new Error('Token non valido o scaduto');
     return res.json();
   }
 
-  if (!orderId) throw new Error('Ordine mancante');
+  if (!orderId) throw new Error('Ordine mancante: usa ID ordine o token recupero');
   const res = await fetch(`/api/orders/${orderId}`);
   if (!res.ok) throw new Error('Ordine non trovato');
   return res.json();
@@ -22,15 +22,24 @@ function render(order) {
   const pdfLink = document.getElementById('pdfLink');
   const pecText = document.getElementById('pecText');
   const checkoutAgain = document.getElementById('checkoutAgain');
+  const recoveryUrl = document.getElementById('recoveryUrl');
 
   if (order.status === 'paid') {
-    stateEl.textContent = `Ordine ${order.id} pagato. Link recupero: /ordine.html?token=${order.recoveryToken}`;
+    const recoverLink = `${window.location.origin}/ordine.html?token=${order.recoveryToken}`;
+    stateEl.textContent = `Ordine ${order.id} confermato e consegnato.`;
     paidBox.style.display = 'block';
     pendingBox.style.display = 'none';
     pdfLink.href = order.document.pdfPath;
     pecText.value = order.document.text;
+    recoveryUrl.textContent = recoverLink;
+
+    const copyRecoveryLink = document.getElementById('copyRecoveryLink');
+    copyRecoveryLink.onclick = async () => {
+      await navigator.clipboard.writeText(recoverLink);
+      document.getElementById('copyFeedback').textContent = 'Link di recupero copiato.';
+    };
   } else {
-    stateEl.textContent = `Ordine ${order.id} in stato ${order.status}. Completa il checkout per sbloccare il documento.`;
+    stateEl.textContent = `Ordine ${order.id} in stato ${order.status}. Completa il checkout per ricevere documento e istruzioni invio.`;
     paidBox.style.display = 'none';
     pendingBox.style.display = 'block';
     checkoutAgain.onclick = async () => {
@@ -52,7 +61,7 @@ async function init() {
   copyBtn?.addEventListener('click', async () => {
     const text = document.getElementById('pecText').value;
     await navigator.clipboard.writeText(text);
-    copyFeedback.textContent = 'Testo PEC copiato.';
+    copyFeedback.textContent = 'Testo PEC copiato. Ora incollalo nella tua casella PEC.';
   });
 
   recoverBtn.addEventListener('click', () => {

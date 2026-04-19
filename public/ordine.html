@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ordine e download documento | Reclamo Energia</title>
-  <meta name="description" content="Pagina ordine: stato pagamento, download PDF e testo PEC copiabile." />
-  <meta property="og:title" content="Ordine Reclamo Energia" />
-  <meta property="og:description" content="Recupera il tuo ordine e scarica il documento finale." />
+  <title>Consegna pratica | Reclamo Energia</title>
+  <meta name="description" content="Consegna finale della tua pratica: PDF professionale, testo PEC e prossimi passi." />
+  <meta property="og:title" content="Consegna pratica Reclamo Energia" />
+  <meta property="og:description" content="Tutto pronto: scarica, invia e conserva la tua documentazione." />
   <link rel="stylesheet" href="/assets/app.css" />
   <script src="/js/consent.js" defer></script>
   <script src="/js/ordine.js" defer></script>
@@ -14,26 +14,71 @@
 <body>
 <main class="wrap">
   <section class="card">
-    <h1>La tua area ordine</h1>
-    <p class="muted" id="orderState">Caricamento ordine...</p>
+    <h1>La tua pratica è pronta</h1>
+    <p class="muted" id="orderState">Stiamo recuperando la tua consegna...</p>
 
     <div id="paidBox" style="display:none;">
-      <p><strong>Pagamento confermato ✅</strong></p>
-      <p><a id="pdfLink" class="btn primary" href="#">Scarica PDF</a></p>
-      <label for="pecText">Testo pronto per PEC</label>
+      <div class="trust" style="margin-bottom:12px;">
+        <strong>Consegna completata ✅</strong>
+        <p style="margin:6px 0 0;">Hai ricevuto un documento professionale, già strutturato per essere inviato via PEC o email formale.</p>
+      </div>
+
+      <div class="grid two">
+        <div class="card" style="margin-top:0;">
+          <h2>Cosa hai ricevuto</h2>
+          <ul>
+            <li>PDF pronto da allegare all'invio.</li>
+            <li>Testo PEC già formattato e copiabile.</li>
+            <li>Link personale di recupero pratica.</li>
+          </ul>
+          <p><a id="pdfLink" class="btn primary" href="#">Scarica PDF professionale</a></p>
+        </div>
+
+        <div class="card" style="margin-top:0;">
+          <h2>Prossimi passi consigliati</h2>
+          <ol>
+            <li>Copia il testo PEC e verifica destinatario/oggetto.</li>
+            <li>Allega il PDF e le prove disponibili.</li>
+            <li>Invia e conserva ricevuta di accettazione/consegna.</li>
+          </ol>
+        </div>
+      </div>
+
+      <h2 style="margin-top:14px;">Testo pronto per PEC</h2>
+      <p class="muted">Puoi incollarlo direttamente nella tua PEC. Mantieni lo stesso oggetto del PDF per coerenza.</p>
       <textarea id="pecText" readonly></textarea>
-      <button class="btn" id="copyPec">Copia testo PEC</button>
+      <div class="inline" style="margin-top:8px;">
+        <button class="btn" id="copyPec">Copia testo PEC</button>
+        <button class="btn" id="copyRecoveryLink">Copia link di recupero</button>
+      </div>
       <p class="muted" id="copyFeedback"></p>
+
+      <div class="grid two" style="margin-top:14px;">
+        <div class="card" style="margin-top:0;">
+          <h3>Cosa conservare</h3>
+          <ul>
+            <li>PDF inviato.</li>
+            <li>Ricevute PEC/email.</li>
+            <li>Bolletta e documenti citati nel reclamo.</li>
+          </ul>
+        </div>
+        <div class="card" style="margin-top:0;">
+          <h3>Recupero futuro</h3>
+          <p class="muted">Conserva questo link personale per tornare qui in qualsiasi momento.</p>
+          <p id="recoveryUrl" class="summary"></p>
+        </div>
+      </div>
     </div>
 
     <div id="pendingBox" style="display:none;">
-      <p>Ordine creato ma non ancora pagato.</p>
+      <p>Ordine creato ma pagamento non ancora confermato.</p>
+      <p class="muted">Completa il checkout per sbloccare il PDF e la consegna completa della pratica.</p>
       <button class="btn primary" id="checkoutAgain">Completa pagamento</button>
     </div>
 
     <div class="card" style="margin-top:18px;">
-      <h2>Recupero documento</h2>
-      <p class="muted">Inserisci link di recupero o ID ordine.</p>
+      <h2>Recupera una pratica esistente</h2>
+      <p class="muted">Inserisci token o apri il link completo ricevuto al checkout.</p>
       <div class="inline">
         <input id="recoverToken" placeholder="token recupero" />
         <button class="btn" id="recoverBtn">Recupera</button>
