@@ -4,9 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Diagnosi guidata pratica energia | Reclamo Energia</title>
-  <meta name="description" content="Percorso guidato per costruire un reclamo energia più preciso, professionale e pronto da inviare." />
-  <meta property="og:title" content="Diagnosi guidata Reclamo Energia" />
-  <meta property="og:description" content="Raccolta dati intelligente per ottenere un documento più forte e davvero utile." />
+  <meta name="description" content="Diagnosi guidata intelligente: inserisci solo i dati utili e ottieni un reclamo luce/gas ordinato, credibile e pronto per PEC." />
   <link rel="stylesheet" href="/assets/app.css" />
   <script src="/js/consent.js" defer></script>
   <script src="/js/wizard.js" defer></script>
@@ -14,22 +12,26 @@
 <body>
 <main class="wrap">
   <section class="card">
-    <h1>Costruiamo insieme una pratica solida</h1>
-    <p class="muted">Ti guidiamo in 4 passaggi: non è un modulo da compilare, è una diagnosi pratica per scrivere un testo più convincente.</p>
+    <p class="eyebrow">Diagnosi Reclamo Energia</p>
+    <h1>Costruiamo una pratica chiara e credibile</h1>
+    <p class="muted">Ti facciamo domande progressive per ordinare i fatti e formulare richieste puntuali. Niente modulo rigido: qui si prepara una comunicazione pronta da inviare.</p>
     <div class="progress" id="progress"><span class="active"></span><span></span><span></span><span></span></div>
 
     <form id="wizardForm" novalidate>
       <div class="step active" data-step="1">
         <h2>1) Tipo pratica e obiettivo</h2>
-        <p class="muted">Partiamo dal caso: così il documento finale sarà davvero diverso in base alla tua esigenza.</p>
         <div class="grid two">
           <div>
-            <label for="type">Tipologia pratica</label>
+            <label for="type">Pratica principale</label>
             <select id="type" name="type">
               <option value="reclamo">Reclamo bolletta</option>
-              <option value="rateizzazione">Richiesta rateizzazione</option>
-              <option value="contatore">Verifica contatore</option>
-              <option value="voltura">Completamento voltura</option>
+              <option value="rateizzazione">Rateizzazione importi</option>
+              <option value="contatore">Verifica tecnica contatore</option>
+              <option value="voltura">Voltura in ritardo</option>
+              <option value="subentro">Subentro / attivazione bloccata</option>
+              <option value="cessazione">Cessazione non gestita</option>
+              <option value="rimborso">Rimborso / storno importi</option>
+              <option value="amministrativo">Reclamo amministrativo generico</option>
             </select>
             <div class="error" data-error="type"></div>
           </div>
@@ -39,154 +41,94 @@
             <div class="error" data-error="reason"></div>
           </div>
           <div>
+            <label for="goal">Risultato che vuoi ottenere</label>
+            <input id="goal" name="goal" placeholder="Es. verifica e rettifica con risposta scritta" />
+            <div class="error" data-error="goal"></div>
+          </div>
+          <div>
+            <label for="tone">Tono del documento</label>
+            <select id="tone" name="tone"><option value="standard">Standard professionale</option><option value="fermo">Più fermo ma civile</option><option value="amministrativo">Sobrio amministrativo</option></select>
+          </div>
+          <div>
             <label for="supplyType">Fornitura</label>
             <select id="supplyType" name="supplyType"><option value="Luce">Luce</option><option value="Gas">Gas</option><option value="Luce e Gas">Luce e Gas</option></select>
             <div class="error" data-error="supplyType"></div>
-          </div>
-          <div>
-            <label for="goal">Cosa vuoi ottenere</label>
-            <select id="goal" name="goal">
-              <option value="rettifica">Rettifica importi e risposta scritta</option>
-              <option value="contestazione">Contestare formalmente la situazione</option>
-              <option value="rateizzazione">Rateizzare l'importo dovuto</option>
-              <option value="chiusura_pratica">Chiudere la pratica con conferma</option>
-            </select>
-            <small class="muted">Impostiamo subito il tono delle richieste finali.</small>
           </div>
           <div>
             <label for="supplierName">Fornitore</label>
             <input id="supplierName" name="supplierName" placeholder="Es. Enel Energia" />
             <div class="error" data-error="supplierName"></div>
           </div>
-          <div>
-            <label for="supplierPec">PEC fornitore (se nota)</label>
-            <input id="supplierPec" name="supplierPec" placeholder="facoltativa" />
-          </div>
         </div>
       </div>
 
       <div class="step" data-step="2">
-        <h2>2) Dati intestatario pratica</h2>
-        <p class="muted">Questi dati compaiono nell'intestazione della lettera e servono per la risposta formale.</p>
+        <h2>2) Intestatario e recapiti</h2>
         <div class="grid two">
           <div><label for="fullName">Nome e cognome</label><input id="fullName" name="fullName" /><div class="error" data-error="fullName"></div></div>
           <div><label for="email">Email</label><input id="email" name="email" placeholder="nome@email.it" /><div class="error" data-error="email"></div></div>
-          <div><label for="pec">La tua PEC (consigliata)</label><input id="pec" name="pec" placeholder="facoltativa" /></div>
+          <div><label for="pec">La tua PEC</label><input id="pec" name="pec" placeholder="facoltativa" /></div>
           <div><label for="phone">Telefono</label><input id="phone" name="phone" placeholder="facoltativo" /></div>
-          <div style="grid-column: 1 / -1"><label for="address">Indirizzo di residenza</label><input id="address" name="address" /><div class="error" data-error="address"></div></div>
+          <div style="grid-column:1/-1"><label for="address">Indirizzo residenza</label><input id="address" name="address" /><div class="error" data-error="address"></div></div>
         </div>
       </div>
 
       <div class="step" data-step="3">
-        <h2>3) Diagnosi caso e prove disponibili</h2>
-        <p class="muted">Più dettagli inserisci, più il reclamo sarà specifico e credibile.</p>
+        <h2>3) Diagnosi caso (domande mirate)</h2>
         <div class="grid two">
           <div><label for="customerCode">Codice cliente / POD / PDR</label><input id="customerCode" name="customerCode" /></div>
           <div><label for="supplyAddress">Indirizzo fornitura</label><input id="supplyAddress" name="supplyAddress" /></div>
-          <div><label for="invoiceNumber">Numero fattura contestata</label><input id="invoiceNumber" name="invoiceNumber" /></div>
-          <div><label for="invoiceDate">Data fattura</label><input id="invoiceDate" name="invoiceDate" type="date" /></div>
+          <div><label for="supplierPec">PEC fornitore (se nota)</label><input id="supplierPec" name="supplierPec" /></div>
+          <div><label for="urgency">Urgenza percepita</label><select id="urgency" name="urgency"><option value="ordinaria">Ordinaria</option><option value="media">Media</option><option value="alta">Alta</option></select></div>
 
-          <div class="case-field" data-types="reclamo,rateizzazione">
-            <label for="invoiceAmount">Importo fattura / importo dovuto (€)</label>
-            <input id="invoiceAmount" name="invoiceAmount" placeholder="es. 286,50" />
-            <div class="error" data-error="invoiceAmount"></div>
+          <div class="case-field" data-types="reclamo,rimborso,rateizzazione,cessazione">
+            <label for="invoiceAmount">Importo coinvolto (€)</label><input id="invoiceAmount" name="invoiceAmount" placeholder="es. 286,50" /><div class="error" data-error="invoiceAmount"></div>
           </div>
           <div class="case-field" data-types="reclamo">
-            <label for="usualAmount">Importo medio abituale (€)</label>
-            <input id="usualAmount" name="usualAmount" placeholder="es. 90" />
+            <label for="usualAmount">Importo medio abituale (€)</label><input id="usualAmount" name="usualAmount" />
+          </div>
+          <div class="case-field" data-types="reclamo,contatore">
+            <label for="incompatibleUsage">Consumi compatibili con uso abituale?</label><select id="incompatibleUsage" name="incompatibleUsage"><option value="">Seleziona</option><option value="si">No, non compatibili</option><option value="no">Sì, compatibili</option><option value="non_so">Non so</option></select>
           </div>
           <div class="case-field" data-types="reclamo">
-            <label for="perceivedDifference">Differenza percepita</label>
-            <input id="perceivedDifference" name="perceivedDifference" placeholder="es. circa il triplo rispetto al normale" />
+            <label for="lowUsageProperty">Immobile vuoto o usato poco?</label><select id="lowUsageProperty" name="lowUsageProperty"><option value="">Seleziona</option><option value="si">Sì</option><option value="no">No</option></select>
           </div>
-          <div class="case-field" data-types="rateizzazione">
-            <label for="requestedInstallments">Numero rate desiderate</label>
-            <input id="requestedInstallments" name="requestedInstallments" placeholder="es. 6" />
-            <div class="error" data-error="requestedInstallments"></div>
-          </div>
-
-          <div class="case-field" data-types="rateizzazione" style="grid-column: 1 / -1">
-            <label for="temporaryDifficulty">Motivo della richiesta di rateizzazione</label>
-            <textarea id="temporaryDifficulty" name="temporaryDifficulty" placeholder="es. difficoltà economica temporanea, spesa imprevista"></textarea>
-          </div>
-
-          <div class="case-field" data-types="voltura">
-            <label for="contractHolderCurrent">Intestatario attuale</label>
-            <input id="contractHolderCurrent" name="contractHolderCurrent" />
-          </div>
-          <div class="case-field" data-types="voltura">
-            <label for="contractHolderNew">Nuovo intestatario</label>
-            <input id="contractHolderNew" name="contractHolderNew" />
-            <div class="error" data-error="contractHolderNew"></div>
-          </div>
-          <div class="case-field" data-types="voltura">
-            <label for="effectiveDate">Data richiesta decorrenza</label>
-            <input id="effectiveDate" name="effectiveDate" type="date" />
-            <div class="error" data-error="effectiveDate"></div>
-          </div>
-          <div class="case-field" data-types="voltura">
-            <label for="supplyActive">La fornitura è attiva?</label>
-            <select id="supplyActive" name="supplyActive"><option value="si">Sì</option><option value="no">No</option><option value="non_so">Non so</option></select>
-          </div>
-
-          <div class="case-field" data-types="contatore">
-            <label for="meterIssueType">Problema rilevato sul contatore</label>
-            <select id="meterIssueType" name="meterIssueType">
-              <option value="consumi_anomali">Consumi anomali</option>
-              <option value="lettura_errata">Lettura errata/stimata</option>
-              <option value="guasto">Possibile guasto</option>
-              <option value="bloccato">Contatore bloccato/non leggibile</option>
-            </select>
-            <div class="error" data-error="meterIssueType"></div>
+          <div class="case-field" data-types="reclamo,contatore">
+            <label for="estimatedReading">Sospetti letture stimate/errate?</label><select id="estimatedReading" name="estimatedReading"><option value="">Seleziona</option><option value="si">Sì</option><option value="no">No</option><option value="non_so">Non so</option></select>
           </div>
           <div class="case-field" data-types="contatore">
-            <label for="selfReadingValue">Autolettura disponibile</label>
-            <input id="selfReadingValue" name="selfReadingValue" placeholder="es. 18342 (se disponibile)" />
+            <label for="meterIssueType">Problema percepito sul contatore</label><input id="meterIssueType" name="meterIssueType" placeholder="Es. scatti irregolari, blocchi, consumi incoerenti" />
+          </div>
+          <div class="case-field" data-types="contatore,reclamo">
+            <label for="selfReadingValue">Autolettura o foto contatore disponibile</label><input id="selfReadingValue" name="selfReadingValue" />
           </div>
 
-          <div class="case-field" data-types="reclamo,contatore">
-            <label for="incompatibleUsage">I consumi sembrano incompatibili con l'uso reale?</label>
-            <select id="incompatibleUsage" name="incompatibleUsage"><option value="">Seleziona</option><option value="si">Sì</option><option value="no">No</option><option value="non_so">Non so</option></select>
-          </div>
-          <div class="case-field" data-types="reclamo,contatore">
-            <label for="lowUsageProperty">Immobile vuoto o usato poco nel periodo?</label>
-            <select id="lowUsageProperty" name="lowUsageProperty"><option value="">Seleziona</option><option value="si">Sì</option><option value="no">No</option></select>
-          </div>
-          <div class="case-field" data-types="reclamo,contatore">
-            <label for="estimatedReading">Sospetti letture stimate o non corrette?</label>
-            <select id="estimatedReading" name="estimatedReading"><option value="">Seleziona</option><option value="si">Sì</option><option value="no">No</option><option value="non_so">Non so</option></select>
-          </div>
-          <div class="case-field" data-types="reclamo,contatore">
-            <label for="previousComplaints">Hai già inviato segnalazioni su questo problema?</label>
-            <select id="previousComplaints" name="previousComplaints"><option value="no">No</option><option value="si">Sì</option></select>
-          </div>
+          <div class="case-field" data-types="reclamo,rimborso,cessazione"><label for="invoiceNumber">Numero fattura</label><input id="invoiceNumber" name="invoiceNumber" /></div>
+          <div class="case-field" data-types="reclamo,rimborso,cessazione"><label for="invoiceDate">Data fattura</label><input id="invoiceDate" name="invoiceDate" type="date" /></div>
+          <div class="case-field" data-types="reclamo,rimborso,cessazione"><label for="disputedPeriod">Periodo contestato</label><input id="disputedPeriod" name="disputedPeriod" placeholder="Es. gennaio-marzo 2026" /></div>
 
-          <div style="grid-column: 1 / -1">
-            <label for="evidenceList">Documenti/prove che puoi allegare</label>
-            <input id="evidenceList" name="evidenceList" placeholder="es. copia bolletta, foto contatore, ricevuta precedente reclamo" />
-            <small class="muted">Indicali qui: saranno richiamati nel testo del reclamo.</small>
-          </div>
+          <div class="case-field" data-types="voltura"><label for="effectiveDate">Data richiesta voltura</label><input id="effectiveDate" name="effectiveDate" type="date" /><div class="error" data-error="effectiveDate"></div></div>
+          <div class="case-field" data-types="voltura"><label for="contractHolderCurrent">Intestatario attuale</label><input id="contractHolderCurrent" name="contractHolderCurrent" /></div>
+          <div class="case-field" data-types="voltura"><label for="contractHolderNew">Nuovo intestatario</label><input id="contractHolderNew" name="contractHolderNew" /></div>
 
-          <div style="grid-column: 1 / -1">
-            <label for="requestedActions">Richieste da inserire nel documento</label>
-            <input id="requestedActions" name="requestedActions" placeholder="es. rettifica importi, sospensione recupero crediti, risposta scritta" />
-          </div>
+          <div class="case-field" data-types="subentro"><label for="activationDate">Data richiesta subentro/attivazione</label><input id="activationDate" name="activationDate" type="date" /><div class="error" data-error="activationDate"></div></div>
+          <div class="case-field" data-types="cessazione"><label for="cessationDate">Data richiesta cessazione</label><input id="cessationDate" name="cessationDate" type="date" /><div class="error" data-error="cessationDate"></div></div>
 
-          <div><label for="tone">Stile del testo</label><select id="tone" name="tone"><option value="formale">Formale professionale</option><option value="chiaro">Più semplice e diretto</option></select></div>
-          <div><label for="writtenResponse">Vuoi chiedere risposta scritta?</label><select id="writtenResponse" name="writtenResponse"><option value="si">Sì</option><option value="no">No</option></select></div>
-
-          <div style="grid-column: 1 / -1"><label for="description">Dettagli aggiuntivi del caso</label><textarea id="description" name="description" placeholder="Racconta brevemente la situazione con date o eventi utili"></textarea><div class="error" data-error="description"></div></div>
+          <div><label for="previousComplaints">Hai già segnalato il problema?</label><select id="previousComplaints" name="previousComplaints"><option value="no">No</option><option value="si">Sì</option></select></div>
+          <div><label for="attachmentsReady">Hai allegati disponibili?</label><select id="attachmentsReady" name="attachmentsReady"><option value="si">Sì</option><option value="no">No</option></select></div>
+          <div style="grid-column:1/-1"><label for="evidenceList">Elenco allegati (se disponibili)</label><input id="evidenceList" name="evidenceList" placeholder="Es. bollette, foto contatore, schermate pratiche" /></div>
+          <div style="grid-column:1/-1"><label for="requestedActions">Richieste specifiche aggiuntive (facoltative)</label><input id="requestedActions" name="requestedActions" placeholder="Es. sospensione recupero, nuova fattura, nota di credito" /></div>
+          <div style="grid-column:1/-1"><label for="description">Descrizione del caso</label><textarea id="description" name="description" placeholder="Racconta cosa è successo e cosa ti aspetti come esito."></textarea><div class="error" data-error="description"></div></div>
         </div>
       </div>
 
       <div class="step" data-step="4">
-        <h2>4) Revisione finale</h2>
-        <p class="muted">Verifica il riepilogo. Dopo il pagamento riceverai una consegna completa con PDF professionale, testo PEC e istruzioni operative.</p>
+        <h2>4) Revisione prima della consegna</h2>
         <div id="summary" class="summary"></div>
-        <p class="muted">Prezzo finale: <strong>7€</strong> una tantum · Nessun abbonamento.</p>
+        <p class="muted">Confermando, sblocchi PDF professionale + oggetto/corpo PEC + istruzioni operative e link di recupero.</p>
       </div>
 
-      <div class="inline" style="margin-top:16px; justify-content:space-between;">
+      <div class="inline wizard-actions">
         <button type="button" class="btn" id="prevBtn">Indietro</button>
         <div>
           <button type="button" class="btn" id="nextBtn">Continua</button>
