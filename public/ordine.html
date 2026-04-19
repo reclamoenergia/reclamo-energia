@@ -4,9 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Consegna pratica | Reclamo Energia</title>
-  <meta name="description" content="Consegna finale della tua pratica: PDF professionale, testo PEC e prossimi passi." />
-  <meta property="og:title" content="Consegna pratica Reclamo Energia" />
-  <meta property="og:description" content="Tutto pronto: scarica, invia e conserva la tua documentazione." />
+  <meta name="description" content="Documento pronto: PDF, oggetto/corpo PEC e istruzioni operative per l'invio." />
   <link rel="stylesheet" href="/assets/app.css" />
   <script src="/js/consent.js" defer></script>
   <script src="/js/ordine.js" defer></script>
@@ -14,73 +12,66 @@
 <body>
 <main class="wrap">
   <section class="card">
-    <h1>La tua pratica è pronta</h1>
-    <p class="muted" id="orderState">Stiamo recuperando la tua consegna...</p>
+    <p class="eyebrow">Consegna finale</p>
+    <h1>La tua pratica è pronta per l’invio</h1>
+    <p class="muted" id="orderState">Stiamo recuperando i dati dell’ordine...</p>
 
     <div id="paidBox" style="display:none;">
-      <div class="trust" style="margin-bottom:12px;">
-        <strong>Consegna completata ✅</strong>
-        <p style="margin:6px 0 0;">Hai ricevuto un documento professionale, già strutturato per essere inviato via PEC o email formale.</p>
+      <div class="trust success">
+        <strong>Consegna completata</strong>
+        <p>Hai ricevuto una comunicazione strutturata, credibile e già pronta per PEC.</p>
       </div>
 
       <div class="grid two">
-        <div class="card" style="margin-top:0;">
+        <div class="soft">
           <h2>Cosa hai ricevuto</h2>
           <ul>
-            <li>PDF pronto da allegare all'invio.</li>
-            <li>Testo PEC già formattato e copiabile.</li>
+            <li>PDF professionale da allegare.</li>
+            <li>Oggetto PEC e corpo PEC separati e copiabili.</li>
             <li>Link personale di recupero pratica.</li>
           </ul>
-          <p><a id="pdfLink" class="btn primary" href="#">Scarica PDF professionale</a></p>
+          <p><a id="pdfLink" class="btn primary" href="#">Scarica PDF</a></p>
         </div>
-
-        <div class="card" style="margin-top:0;">
-          <h2>Prossimi passi consigliati</h2>
+        <div class="soft">
+          <h2>Prossimi passi</h2>
           <ol>
-            <li>Copia il testo PEC e verifica destinatario/oggetto.</li>
-            <li>Allega il PDF e le prove disponibili.</li>
-            <li>Invia e conserva ricevuta di accettazione/consegna.</li>
+            <li>Verifica PEC destinatario del fornitore.</li>
+            <li>Incolla oggetto e corpo PEC, allega PDF e prove.</li>
+            <li>Conserva ricevute PEC e documentazione inviata.</li>
           </ol>
         </div>
       </div>
 
-      <h2 style="margin-top:14px;">Testo pronto per PEC</h2>
-      <p class="muted">Puoi incollarlo direttamente nella tua PEC. Mantieni lo stesso oggetto del PDF per coerenza.</p>
-      <textarea id="pecText" readonly></textarea>
-      <div class="inline" style="margin-top:8px;">
-        <button class="btn" id="copyPec">Copia testo PEC</button>
+      <div class="grid two">
+        <div>
+          <h3>Oggetto PEC</h3>
+          <textarea id="pecSubject" readonly></textarea>
+          <button class="btn" id="copySubject">Copia oggetto</button>
+        </div>
+        <div>
+          <h3>Corpo PEC</h3>
+          <textarea id="pecBody" readonly></textarea>
+          <button class="btn" id="copyBody">Copia corpo PEC</button>
+        </div>
+      </div>
+
+      <div class="soft" style="margin-top:14px;">
+        <h3>Link di recupero pratica</h3>
+        <p id="recoveryUrl" class="summary"></p>
         <button class="btn" id="copyRecoveryLink">Copia link di recupero</button>
       </div>
       <p class="muted" id="copyFeedback"></p>
-
-      <div class="grid two" style="margin-top:14px;">
-        <div class="card" style="margin-top:0;">
-          <h3>Cosa conservare</h3>
-          <ul>
-            <li>PDF inviato.</li>
-            <li>Ricevute PEC/email.</li>
-            <li>Bolletta e documenti citati nel reclamo.</li>
-          </ul>
-        </div>
-        <div class="card" style="margin-top:0;">
-          <h3>Recupero futuro</h3>
-          <p class="muted">Conserva questo link personale per tornare qui in qualsiasi momento.</p>
-          <p id="recoveryUrl" class="summary"></p>
-        </div>
-      </div>
     </div>
 
     <div id="pendingBox" style="display:none;">
       <p>Ordine creato ma pagamento non ancora confermato.</p>
-      <p class="muted">Completa il checkout per sbloccare il PDF e la consegna completa della pratica.</p>
       <button class="btn primary" id="checkoutAgain">Completa pagamento</button>
     </div>
 
     <div class="card" style="margin-top:18px;">
-      <h2>Recupera una pratica esistente</h2>
-      <p class="muted">Inserisci token o apri il link completo ricevuto al checkout.</p>
+      <h2>Recupera una pratica</h2>
       <div class="inline">
-        <input id="recoverToken" placeholder="token recupero" />
+        <input id="recoverToken" placeholder="Incolla token recupero" />
         <button class="btn" id="recoverBtn">Recupera</button>
       </div>
       <p class="muted" id="recoverFeedback"></p>

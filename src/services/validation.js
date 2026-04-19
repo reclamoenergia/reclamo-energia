@@ -6,9 +6,7 @@ function isBlank(value) {
 
 function validateOrderPayload(payload = {}) {
   const errors = {};
-  const required = ['type', 'reason', 'supplyType', 'supplierName', 'goal', 'fullName', 'email', 'address'];
-
-  required.forEach((field) => {
+  ['type', 'reason', 'supplyType', 'supplierName', 'goal', 'fullName', 'email', 'address'].forEach((field) => {
     if (isBlank(payload[field])) errors[field] = 'Campo obbligatorio';
   });
 
@@ -23,25 +21,27 @@ function validateOrderPayload(payload = {}) {
   });
 
   if (isBlank(payload.description)) {
-    errors.description = 'Inserisci almeno un riepilogo breve del problema';
+    errors.description = 'Descrivi brevemente il problema per migliorare la qualità del testo';
   }
 
-  if (payload.type === 'reclamo' && isBlank(payload.invoiceAmount)) {
-    errors.invoiceAmount = 'Per un reclamo su bolletta indica l\'importo contestato';
+  if (['reclamo', 'rimborso', 'cessazione'].includes(payload.type) && isBlank(payload.invoiceAmount)) {
+    errors.invoiceAmount = 'Indica l’importo coinvolto, se disponibile';
   }
 
-  if (payload.type === 'rateizzazione') {
-    if (isBlank(payload.invoiceAmount)) errors.invoiceAmount = 'Indica l\'importo da rateizzare';
-    if (isBlank(payload.requestedInstallments)) errors.requestedInstallments = 'Indica il numero di rate desiderate';
+  if (payload.type === 'rateizzazione' && isBlank(payload.invoiceAmount)) {
+    errors.invoiceAmount = 'Indica l’importo da rateizzare';
   }
 
-  if (payload.type === 'voltura') {
-    if (isBlank(payload.contractHolderNew)) errors.contractHolderNew = 'Indica il nuovo intestatario';
-    if (isBlank(payload.effectiveDate)) errors.effectiveDate = 'Indica la data richiesta';
+  if (payload.type === 'voltura' && isBlank(payload.effectiveDate)) {
+    errors.effectiveDate = 'Inserisci la data della richiesta';
   }
 
-  if (payload.type === 'contatore' && isBlank(payload.meterIssueType)) {
-    errors.meterIssueType = 'Seleziona il problema del contatore';
+  if (payload.type === 'subentro' && isBlank(payload.activationDate)) {
+    errors.activationDate = 'Inserisci la data della richiesta di subentro/attivazione';
+  }
+
+  if (payload.type === 'cessazione' && isBlank(payload.cessationDate)) {
+    errors.cessationDate = 'Inserisci la data della richiesta di cessazione';
   }
 
   return errors;
